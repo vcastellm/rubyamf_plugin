@@ -65,8 +65,7 @@ class RubyamfController < ActionController::Base
   		  </head><body bgcolor='#222222'>
   		  <table width='100%' border=1 align=center valign=middle height='100%'>
   		  <tr><td width=100 align=center>
-  		  <a href='http://blog.rubyamf.org'><img border=0 src='http://blog.rubyamf.org/images/gateway.png' /></a>
-  		  <br/>Your gateway is alive and well."
+  		  <a href='http://blog.rubyamf.org'><img border=0 src='http://blog.rubyamf.org/images/gateway.png' /></a>"
   		else
   		  #send the raw data throught the rubyamf gateway and create the response
 		    amf_response = gateway.service(request.env["RAW_POST_DATA"])
