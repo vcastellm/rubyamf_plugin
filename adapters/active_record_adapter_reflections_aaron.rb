@@ -20,12 +20,6 @@ class ActiveRecordAdapter
       val = ar.send(:"#{column}")
       eval("ob.#{column}=val")
     end
-    
-    #turn the outgoing object into a VO if neccessary
-    map = VoUtil.get_vo_definition_from_active_record(ar.class.to_s)
-    if map != nil
-      ob._explicitType = map[:outgoing]
-    end
     ob
   end
 
@@ -44,17 +38,15 @@ class ActiveRecordAdapter
   #utility method to find associations that were actually included in the query (":include")
   def active_associations(ar,associations)
     na = []
-    aa = ar.active_associations
     associations.each do |association|
-      #puts association.inspect
-      a = association[1]
-      if aa.include?("@" + a.name.to_s)
+      if association[1].instance_variables.include?("@klass")
+        a = association[1]
         na << a
       end
     end
     na
   end
-  
+
   #is the result an array of active records
   def is_many?(results)
     if(results.class.to_s == 'Array' && results[0].class.superclass.to_s == 'ActiveRecord::Base')
@@ -118,7 +110,7 @@ class ActiveRecordAdapter
     payload
   end
   
-  def write_multiple(ar, payload, associations)    
+  def write_multiple(ar, payload, associations)
     ar.each_with_index do |record,i|
       #write attributes on this object
       attributes_holder = OpenStruct.new
