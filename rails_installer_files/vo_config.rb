@@ -26,11 +26,12 @@
 #ValueObjects.register({:incoming => 'User', :map_to => 'User', :outgoing => 'User', :type => 'active_record'})
 #ValueObjects.register({:incoming => 'Address', :map_to => 'Address', :outgoing => 'Address', :type => 'active_record'})
 
-#=> Translate Case on VOs
-# Most actionscript uses camel case instead of snake case. Set ValueObjects.translate_case to true if wanted
+
+##################################
+#=> CASE TRANSLATIONS
+# Most actionscript uses camel case instead of snake case. Set ValueObjects.translate_case to true if want translations to occur.
 # An incoming property like: myProperty gets turned into my_property
 # An outgoing property like my_property gets turned into myProperty
-#
 ValueObjects.translate_case = false
 
 
