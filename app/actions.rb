@@ -329,7 +329,7 @@ class RailsInvokeAction
 		if @amfbody.value.empty? || @amfbody.value.nil?
 		  @service.process(req,res)
 		else
-		  @amfbody.value.each_with_index do |item,i|		    
+		  @amfbody.value.each_with_index do |item,i|
 		    req.parameters[i] = item
 		    if item.class.superclass.to_s == 'ActiveRecord::Base'
 		      req.parameters[i] = item.original_vo_from_deserialization.to_hash
@@ -364,8 +364,15 @@ class RailsInvokeAction
   		        req.parameters[:id] = item.id
   		      end
   		      req.parameters.merge!(item.to_hash)
-  		    end  		    
+  		    end
 		    end
+      end
+      
+      begin
+        #One last update of the parameters hash, this will map custom mappings to the hash, and will override any conflicting from above
+        Parameter::Map.update_request_parameters(@amfbody.target_uri,@amfbody.service_method_name,req.parameters,@amfbody.value)
+      rescue Exception => e
+        raise RUBYAMFException.new(RUBYAMFException.PARAMETER_MAPPING_ERROR, "There was an error with your parameter mappings: {#{e.message}}")
       end
 	    @service.process(req,res)
     end

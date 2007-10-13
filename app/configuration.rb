@@ -142,5 +142,45 @@ class ValueObjects
     @@translate_case = v
   end
 end
+
+class Parameter
+  module Map
+    @@maps = []
+    
+    def self.register(mapping)
+      @@maps << mapping
+    end
+    
+    def self.get_maps
+      @@maps
+    end
+    
+    def self.eval_string(str)
+      str = str.gsub!("{","[")
+      str = str.gsub!("}","]")
+      return str
+    end
+    
+    def self.update_request_parameters(controller,action,railsparams,remotingparams)
+      begin
+        maps = []
+        @@maps.each do |map|
+          if map[:controller] == controller.to_sym && map[:action] == action.to_sym
+            maps << map
+          end
+        end
+        if maps.empty? then return nil end
+        maps.each do |var|
+          var[:params].each do |k,v|
+            accessor = self.eval_string(v)
+            railsparams[k.to_sym] = eval("remotingparams#{accessor}")
+          end
+        end
+      rescue Exception => e
+        raise
+      end
+    end
+  end
+end
 end
 end
