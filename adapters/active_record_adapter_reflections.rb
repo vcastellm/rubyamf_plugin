@@ -20,6 +20,12 @@ class ActiveRecordAdapter
       val = ar.send(:"#{column}")
       eval("ob.#{column}=val")
     end
+    
+    #turn the outgoing object into a VO if neccessary
+    map = VoUtil.get_vo_definition_from_active_record(ar.class.to_s)
+    if map != nil
+      ob._explicitType = map[:outgoing]
+    end
     ob
   end
 
@@ -48,7 +54,7 @@ class ActiveRecordAdapter
     end
     na
   end
-
+  
   #is the result an array of active records
   def is_many?(results)
     if(results.class.to_s == 'Array' && results[0].class.superclass.to_s == 'ActiveRecord::Base')
