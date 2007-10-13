@@ -8,10 +8,12 @@
 #fixed issue with returned value objects that had :belongs_to association, it now correctly returns an object, not wrapped in any array anymore.
 #changed read_write so it doesn't crash in production when setCredentials is set. When in production mode the exception message was different in different modes.
 #fixed debug player issues. It correlates to the rails modes. An error that was happening while reading integers was raising errors, but the message was different per mode, so a regex I was using to sniff it was not catching it in production mode.
-#added initial :through support
+#added :through support
 #added magic_field ignorance. Incoming VO's magic field members are ignored. Currently magic fields are "created_at","created_on","updated_at","updated_on"
 #Rails no longer complains about missing views for RubyAMF requests.
-#added ParamMapping for mapping incoming remoting parameters into rails' params hash
+#added ParamMapping for mapping incoming remoting parameters into rails' params hash.
+#rewrote active record adapter. Everything is done with the usual recursion, but also with reflections. Allows a 1:1 VO to AR.
+#Squeezed every possible millisecond out of the active record adapter. It's slightly faster, were talking 10's - 100's of milleseconds. The speed increase varies depending on the complexity of your result.
 
 --changes 1.3.3b
 #updated rails parameter mapping for sending generic objects from flash/flex
