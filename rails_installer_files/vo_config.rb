@@ -22,13 +22,30 @@
 # If your VO's aren't active_records, there are two instance variables that are injected to your class so that RubyAMF knows what they are.
 # '_explicitType' and 'rmembers'. Just a heads up if you inspect a VO. Don't be surprised by those.
 #
-#=> Expect Camel Case Properties on VOs
-# Most actionscript uses camel case instead of snake case. Un-comment this line if you want RAMF to translate snake cased
-# properties from ActiveRecord into camel cased properties on VOs
-# EX: ar_record.my_prop becomes actioncriptVO.myProp and vice versa
-# 
-ValueObjects.translate_case = false
 #ValueObjects.register({:incoming => 'Person', :map_to => 'Person', :outgoing => 'Person', :type => 'active_record'})
 #ValueObjects.register({:incoming => 'User', :map_to => 'User', :outgoing => 'User', :type => 'active_record'})
 #ValueObjects.register({:incoming => 'Address', :map_to => 'Address', :outgoing => 'Address', :type => 'active_record'})
 
+#=> Translate Case on VOs
+# Most actionscript uses camel case instead of snake case. Set ValueObjects.translate_case to true if wanted
+# An incoming property like: myProperty gets turned into my_property
+# An outgoing property like my_property gets turned into myProperty
+#
+ValueObjects.translate_case = false
+
+
+##################################
+#=> INCOMING REMOTING PARAMETER MAPPINGS
+#
+# Incoming Remoting Parameter mappings allow you to map an incoming requests parameters into rails' params hash
+# Here's an example:
+# Parameter::Map.register({
+#   :controller => :UserController,
+#   :action => :find_friend,
+#   :params => { :friend => "{0}.friend" }
+# })
+# This example maps the first remoting parameters "friend" property into params[:friend]
+# {0} representes an array accessor
+# . represents object notation.
+# So you could do this: "{0}{0}.users{5}.firstname" and it will take the value 
+# from your remoting parameters: [0][0].users[5].firstname
