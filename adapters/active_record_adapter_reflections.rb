@@ -2,7 +2,10 @@ require 'ostruct'
 class ActiveRecordAdapter
   
   def use_adapter?(results)
-    true
+    if(is_many?(results) || is_single?(results))
+      true
+    end
+    false
   end
   
   def run(results)
