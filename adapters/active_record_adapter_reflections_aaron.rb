@@ -3,7 +3,7 @@ class ActiveRecordAdapter
   
   def use_adapter?(results)
     if(is_many?(results) || is_single?(results))
-      true
+      return true
     end
     false
   end
@@ -38,9 +38,10 @@ class ActiveRecordAdapter
   #utility method to find associations that were actually included in the query (":include")
   def active_associations(ar,associations)
     na = []
+    aa = ar.active_associations
     associations.each do |association|
-      if association[1].instance_variables.include?("@klass")
-        a = association[1]
+      a = association[1]
+      if aa.include?("@" + a.name.to_s)
         na << a
       end
     end
