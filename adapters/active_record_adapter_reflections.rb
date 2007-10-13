@@ -9,11 +9,14 @@ class ActiveRecordAdapter
     debugger
     #method_hash = {:has_many => self.has_many, :belongs_to => self.belongs_to, :through => self.through, :has_and_belongs_to_many => self.has_and_belongs_to_many}
     result_object = self.walk(results)
-    map = VoUtil.get_vo_definition_from_active_record(ar.class.to_s)
+    map = VoUtil.get_vo_definition_from_active_record(results.class.to_s)
     if map != nil
-    	result_object._explicitType = map[:outgoing]
+      results_object._explicitType = map[:outgoing]
     end
-    result_object
+    debugger
+
+    return result_object
+    
   end
 
   #utility method for writing attributes on an active record
@@ -26,11 +29,12 @@ class ActiveRecordAdapter
   end
 
   #turn the outgoing object into a VO if neccessary
-  map = VoUtil.get_vo_definition_from_active_record(ar.class.to_s)
-  if map != nil
-    ob._explicitType = map[:outgoing]
-  end
-  ob
+  #map = VoUtil.get_vo_definition_from_active_record(ar.class.to_s)
+  #if map != nil
+  #  ob._explicitType = map[:outgoing]
+  #end
+  #ob
+
 
   def write_single_attributes(ar,ob)
     #debugger
