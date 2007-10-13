@@ -1,0 +1,614 @@
+Thread ID: 101350
+  %total   %self     total      self    children             calls   Name
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00               17/17     #toplevel
+   0.00%   0.00%      0.00      0.00      0.00                  17     Kernel#==
+--------------------------------------------------------------------------------
+                     31.20     31.20      0.00               16/16     #toplevel
+ 100.00% 100.00%     31.20     31.20      0.00                  16     <Class::IO>#select
+--------------------------------------------------------------------------------
+ 100.00%   0.00%     31.20      0.00     31.20                   1     #toplevel
+                     31.20     31.20      0.00               16/16     <Class::IO>#select
+                      0.00      0.00      0.00               17/17     Kernel#==
+
+
+Thread ID: 10709850
+  %total   %self     total      self    children             calls   Name
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     Kernel#inspect
+   0.00%   0.00%      0.00      0.00      0.00                   1     TrueClass#to_s
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00               54/60     Hash#each
+                      0.00      0.00      0.00                2/60     OpenStruct#to_s
+                      0.00      0.00      0.00                4/60     OpenStruct#inspect
+   0.00%   0.00%      0.00      0.00      0.00                  60     Thread#[]
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00               27/36     Hash#each
+                      0.00      0.00      0.00                9/36     Array#map
+   0.00%   0.00%      0.00      0.00      0.00                  36     Symbol#to_s
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     BinaryWriterMixin#write_word32_network
+   0.00%   0.00%      0.00      0.00      0.00                   1     String#reverse!
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00              2/3029     RUBYAMF::Util::BinaryString#write_utf
+                      0.00      0.00      0.00           3027/3029     RUBYAMF::IO::AMFSerializer#write_amf3_string
+   0.00%   0.00%      0.00      0.00      0.00                3029     String#length
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00            15/54067     Hash#each
+                      0.00      0.00      0.00             4/54067     Hash#inspect
+                      0.00      0.00      0.00            10/54067     Kernel#inspect
+                      0.00      0.00      0.00             2/54067     Kernel#__send__
+                      0.22      0.22      0.00         54036/54067     Array#inspect
+2200.00%2200.00%      0.22      0.22      0.00               54067     String#inspect
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00           5/5158892     Array#each
+                      0.00      0.00      0.00           1/5158892     RUBYAMF::IO::AMFSerializer#write_amf3_recordset
+                      0.00      0.00      0.00           1/5158892     RUBYAMF::IO::AMFSerializer#write_amf3_object
+                      0.00      0.00      0.00           1/5158892     RUBYAMF::IO::AMFSerializer#write
+                      0.11      0.11      0.00       39032/5158892     RUBYAMF::IO::AMFSerializer#write_amf3_string
+                      0.00      0.00      0.00           1/5158892     <Module::ByteOrder>#byte_order
+                     11.17     11.17      0.00     5119851/5158892     Array#index
+112800.00%112800.00%     11.28     11.28      0.00             5158892     String#==
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00            51/69150     Hash#each
+                      0.00      0.00      0.00             1/69150     OpenStruct#to_s
+                      0.00      0.00      0.00             2/69150     OpenStruct#inspect
+                      0.09      0.09      0.00         69096/69150     Kernel#__send__
+ 900.00% 900.00%      0.09      0.09      0.00               69150     String#<<
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 2/2     Integer#upto
+   0.00%   0.00%      0.00      0.00      0.00                   2     RUBYAMF::Util::BinaryString#write_utf
+                      0.00      0.00      0.00                 2/5     BinaryWriterMixin#write_int16_network
+                      0.00      0.00      0.00              2/3029     String#length
+                      0.00      0.00      0.00             2/69096     RUBYAMF::Util::BinaryString#write
+--------------------------------------------------------------------------------
+                      0.40      0.04      0.36          9004/66061     Array#each
+                      0.00      0.00      0.00             4/66061     RUBYAMF::IO::AMFSerializer#write_amf3_recordset
+                      0.00      0.00      0.00             1/66061     RUBYAMF::IO::AMFSerializer#write_amf3_object
+                      0.00      0.00      0.00             2/66061     RUBYAMF::IO::AMFSerializer#write_amf3_mixed_array
+                      0.00      0.00      0.00             1/66061     RUBYAMF::IO::AMFSerializer#write
+                      0.17      0.02      0.15          3004/66061     RUBYAMF::IO::AMFSerializer#write_amf3_string
+                      0.00      0.00      0.00             6/66061     RUBYAMF::IO::AMFSerializer#write_amf3
+                      0.82      0.06      0.76         18006/66061     Integer#upto
+                      0.00      0.00      0.00             1/66061     RUBYAMF::IO::AMFSerializer#write_amf3_number
+                      1.66      0.20      1.46         36032/66061     RUBYAMF::IO::AMFSerializer#write_amf3_integer
+30500.00%3200.00%      3.05      0.32      2.73               66061     RUBYAMF::Util::BinaryString#write_byte
+                      2.73      0.35      2.38         66061/66061     BinaryWriterMixin#write_int8
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00             2/69096     RUBYAMF::Util::BinaryString#write_utf
+                      0.00      0.00      0.00             1/69096     BinaryWriterMixin#write_word32_network
+                      0.02      0.00      0.02          3027/69096     RUBYAMF::IO::AMFSerializer#write_amf3_string
+                      1.17      0.38      0.79         66066/69096     BinaryWriterMixin#pw
+11900.00%3800.00%      1.19      0.38      0.81               69096     RUBYAMF::Util::BinaryString#write
+                      0.81      0.44      0.37         69096/69096     #<Class:0x110bed0>#<<
+--------------------------------------------------------------------------------
+                      0.33      0.03      0.30          3010/39032     Array#each
+                      0.00      0.00      0.00             1/39032     RUBYAMF::IO::AMFSerializer#write_amf3_recordset
+                      0.00      0.00      0.00             2/39032     RUBYAMF::IO::AMFSerializer#write_amf3_object
+                      0.00      0.00      0.00             2/39032     RUBYAMF::IO::AMFSerializer#write_amf3_mixed_array
+                      0.01      0.00      0.01             5/39032     RUBYAMF::IO::AMFSerializer#write_amf3
+                     30.23      1.05     29.18         36012/39032     Integer#upto
+305700.00%10800.00%     30.57      1.08     29.49               39032     RUBYAMF::IO::AMFSerializer#write_amf3_string
+                      0.11      0.11      0.00       39032/5158892     String#==
+                      0.07      0.07      0.00         33001/69038     Fixnum#to_s
+                      0.17      0.02      0.15          3004/66061     RUBYAMF::Util::BinaryString#write_byte
+                      0.00      0.00      0.00           3027/3029     String#length
+                      2.06      0.48      1.58        75060/111126     #<Class:0x11206f0>#info
+                      0.08      0.08      0.00         36028/36028     Fixnum#<<
+                      0.16      0.11      0.05         33001/87065     Fixnum#==
+                     23.13     11.96     11.17         36028/36029     Array#index
+                      0.02      0.00      0.02          3027/69096     RUBYAMF::Util::BinaryString#write
+                      0.00      0.00      0.00           3027/6058     Array#<<
+                      3.67      0.75      2.92         36028/36030     RUBYAMF::IO::AMFSerializer#write_amf3_integer
+                      0.01      0.01      0.00           3027/3029     Fixnum#|
+                      0.01      0.01      0.00          3027/54057     Kernel#==
+--------------------------------------------------------------------------------
+                     32.57      0.00     32.57                 1/1     RUBYAMF::IO::AMFSerializer#write_amf3
+325700.00%   0.00%     32.57      0.00     32.57                   1     RUBYAMF::IO::AMFSerializer#write_amf3_recordset
+                      0.00      0.00      0.00           1/5158892     String#==
+                      0.00      0.00      0.00                 1/1     Fixnum#>
+                      0.00      0.00      0.00                 1/1     Fixnum#*
+                      0.00      0.00      0.00              3/3004     Fixnum#+
+                      0.00      0.00      0.00             1/39032     RUBYAMF::IO::AMFSerializer#write_amf3_string
+                      0.00      0.00      0.00              1/3004     Fixnum#-
+                      0.00      0.00      0.00              1/3004     Integer#upto
+                      0.00      0.00      0.00             4/66061     RUBYAMF::Util::BinaryString#write_byte
+                      0.00      0.00      0.00                 1/2     Enumerable#each_with_index
+                      0.00      0.00      0.00            1/111126     #<Class:0x11206f0>#info
+                      0.00      0.00      0.00                 1/3     Array#length
+                      0.00      0.00      0.00             1/36030     RUBYAMF::IO::AMFSerializer#write_amf3_integer
+--------------------------------------------------------------------------------
+                     32.86      0.00     32.86                 1/1     RUBYAMF::IO::AMFSerializer#write_amf3
+328600.00%   0.00%     32.86      0.00     32.86                   1     RUBYAMF::IO::AMFSerializer#write_amf3_object
+                      0.00      0.00      0.00           1/5158892     String#==
+                      0.00      0.00      0.00                 1/1     Array#map
+                      0.00      0.00      0.00                 2/3     <Object::OpenStruct>#_explicitType
+                      0.00      0.00      0.00                 2/4     #<Class:0x11206f0>#debug
+                      0.00      0.00      0.00             2/39032     RUBYAMF::IO::AMFSerializer#write_amf3_string
+                      0.22      0.00      0.22                 1/2     OpenStruct#inspect
+                      0.00      0.00      0.00             1/66061     RUBYAMF::Util::BinaryString#write_byte
+                     32.64      0.00     32.64                 1/2     Enumerable#each_with_index
+                      0.00      0.00      0.00             1/90100     Kernel#is_a?
+                      0.00      0.00      0.00                 1/1     OpenStruct#marshal_dump
+                      0.00      0.00      0.00            4/111126     #<Class:0x11206f0>#info
+                      0.00      0.00      0.00             1/36029     Array#index
+                      0.00      0.00      0.00                 1/1     Hash#keys
+                      0.00      0.00      0.00              1/6058     Array#<<
+                      0.00      0.00      0.00             1/54057     Kernel#==
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     RUBYAMF::IO::AMFSerializer#write_amf3
+   0.00%   0.00%      0.00      0.00      0.00                   1     RUBYAMF::IO::AMFSerializer#write_amf3_number
+                      0.00      0.00      0.00             1/66061     RUBYAMF::Util::BinaryString#write_byte
+                      0.00      0.00      0.00                 1/1     Fixnum#>=
+                      0.00      0.00      0.00            1/111126     #<Class:0x11206f0>#info
+                      0.00      0.00      0.00                 1/1     Fixnum#<=
+                      0.00      0.00      0.00             1/36030     RUBYAMF::IO::AMFSerializer#write_amf3_integer
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     RUBYAMF::IO::AMFSerializer#write_amf3
+   0.00%   0.00%      0.00      0.00      0.00                   1     RUBYAMF::IO::AMFSerializer#write_amf3_mixed_array
+                      0.00      0.00      0.00                 1/4     Hash#each
+                      0.00      0.00      0.00             2/39032     RUBYAMF::IO::AMFSerializer#write_amf3_string
+                      0.00      0.00      0.00             2/66061     RUBYAMF::Util::BinaryString#write_byte
+                      0.00      0.00      0.00            1/111126     #<Class:0x11206f0>#info
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00             1/36030     RUBYAMF::IO::AMFSerializer#write_amf3_recordset
+                      3.67      0.75      2.92         36028/36030     RUBYAMF::IO::AMFSerializer#write_amf3_string
+                      0.00      0.00      0.00             1/36030     RUBYAMF::IO::AMFSerializer#write_amf3_number
+36700.00%7500.00%      3.67      0.75      2.92               36030     RUBYAMF::IO::AMFSerializer#write_amf3_integer
+                      0.06      0.06      0.00         36030/69038     Fixnum#to_s
+                      1.66      0.20      1.46         36032/66061     RUBYAMF::Util::BinaryString#write_byte
+                      1.11      0.29      0.82        36030/111126     #<Class:0x11206f0>#info
+                      0.00      0.00      0.00                 2/2     Fixnum#>>
+                      0.05      0.05      0.00         36034/36034     Fixnum#&
+                      0.04      0.04      0.00        36032/147162     Fixnum#<
+                      0.00      0.00      0.00              2/3029     Fixnum#|
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 8/9     Array#each
+                     33.09      0.01     33.08                 1/9     RUBYAMF::IO::AMFSerializer#write
+330900.00% 100.00%     33.09      0.01     33.08                   9     RUBYAMF::IO::AMFSerializer#write_amf3
+                      0.00      0.00      0.00                9/12     Kernel#class
+                     32.57      0.00     32.57                 1/1     RUBYAMF::IO::AMFSerializer#write_amf3_recordset
+                     32.86      0.00     32.86                 1/1     RUBYAMF::IO::AMFSerializer#write_amf3_object
+                      0.00      0.00      0.00                 1/1     RUBYAMF::IO::AMFSerializer#write_amf3_mixed_array
+                      0.22      0.00      0.22                 1/1     OpenStruct#to_s
+                      0.00      0.00      0.00                 1/1     Kernel#to_s
+                      0.01      0.00      0.01             5/39032     RUBYAMF::IO::AMFSerializer#write_amf3_string
+                      0.00      0.00      0.00             1/69038     Fixnum#to_s
+                      0.00      0.00      0.00             6/66061     RUBYAMF::Util::BinaryString#write_byte
+                      0.00      0.00      0.00                9/12     Module#to_s
+                      0.00      0.00      0.00            69/90100     Kernel#is_a?
+                      0.00      0.00      0.00           27/111126     #<Class:0x11206f0>#info
+                      0.00      0.00      0.00                 1/1     RUBYAMF::IO::AMFSerializer#write_amf3_number
+                      0.00      0.00      0.00                 1/1     Hash#to_s
+                      0.00      0.00      0.00            9/111139     Kernel#nil?
+--------------------------------------------------------------------------------
+                     33.09      0.00     33.09                 1/1     Integer#upto
+330900.00%   0.00%     33.09      0.00     33.09                   1     RUBYAMF::IO::AMFSerializer#write
+                      0.00      0.00      0.00           1/5158892     String#==
+                     33.09      0.01     33.08                 1/9     RUBYAMF::IO::AMFSerializer#write_amf3
+                      0.00      0.00      0.00             1/66061     RUBYAMF::Util::BinaryString#write_byte
+                      0.00      0.00      0.00            1/111126     #<Class:0x11206f0>#info
+--------------------------------------------------------------------------------
+   0.00%   0.00%      0.00      0.00      0.00                   0     RUBYAMF::IO::AMFSerializer#serialize
+                      0.00      0.00      0.00                 1/1     RUBYAMF::AMF::AMFObject#num_outheaders
+                      0.00      0.00      0.00                 2/4     #<Class:0x11206f0>#debug
+                      0.00      0.00      0.00              2/3004     Fixnum#-
+                     33.09      0.00     33.09              2/3004     Integer#upto
+                      0.00      0.00      0.00                 3/5     BinaryWriterMixin#write_int16_network
+                      0.32      0.00      0.32                1/12     Kernel#inspect
+                      0.00      0.00      0.00                 1/1     RUBYAMF::AMF::AMFObject#num_body
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     Integer#upto
+   0.00%   0.00%      0.00      0.00      0.00                   1     RUBYAMF::IO::AMFSerializer#reset_referencables
+                      0.00      0.00      0.00            1/111126     #<Class:0x11206f0>#info
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     RUBYAMF::IO::AMFSerializer#serialize
+   0.00%   0.00%      0.00      0.00      0.00                   1     RUBYAMF::AMF::AMFObject#num_outheaders
+                      0.00      0.00      0.00                 1/3     Array#length
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     RUBYAMF::IO::AMFSerializer#serialize
+   0.00%   0.00%      0.00      0.00      0.00                   1     RUBYAMF::AMF::AMFObject#num_body
+                      0.00      0.00      0.00                 1/3     Array#length
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     Integer#upto
+   0.00%   0.00%      0.00      0.00      0.00                   1     RUBYAMF::AMF::AMFObject#get_body_at
+                      0.00      0.00      0.00             2/36014     Array#[]
+--------------------------------------------------------------------------------
+                      0.22      0.00      0.22                 1/1     RUBYAMF::IO::AMFSerializer#write_amf3
+2200.00%   0.00%      0.22      0.00      0.22                   1     OpenStruct#to_s
+                      0.22      0.00      0.22                 1/4     Hash#each
+                      0.00      0.00      0.00             1/69150     String#<<
+                      0.00      0.00      0.00                1/12     Kernel#class
+                      0.00      0.00      0.00                 1/3     Array#include?
+                      0.00      0.00      0.00                2/60     <Class::Thread>#current
+                      0.00      0.00      0.00                1/12     Module#to_s
+                      0.00      0.00      0.00                2/60     Thread#[]
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     RUBYAMF::IO::AMFSerializer#write_amf3_object
+   0.00%   0.00%      0.00      0.00      0.00                   1     OpenStruct#marshal_dump
+--------------------------------------------------------------------------------
+                      0.22      0.00      0.22                 1/2     RUBYAMF::IO::AMFSerializer#write_amf3_object
+                      0.30      0.00      0.30                 1/2     Kernel#inspect
+5200.00%   0.00%      0.52      0.00      0.52                   2     OpenStruct#inspect
+                      0.52      0.00      0.52                 2/4     Hash#each
+                      0.00      0.00      0.00             2/69150     String#<<
+                      0.00      0.00      0.00                2/12     Kernel#class
+                      0.00      0.00      0.00                 2/3     Array#include?
+                      0.00      0.00      0.00                4/60     <Class::Thread>#current
+                      0.00      0.00      0.00                2/12     Module#to_s
+                      0.00      0.00      0.00                4/60     Thread#[]
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 3/3     Fixnum#==
+   0.00%   0.00%      0.00      0.00      0.00                   3     OpenStruct#==
+                      0.00      0.00      0.00                 3/3     Kernel#kind_of?
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 3/3     Hash#each
+   0.00%   0.00%      0.00      0.00      0.00                   3     NilClass#inspect
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                1/12     OpenStruct#to_s
+                      0.00      0.00      0.00                9/12     RUBYAMF::IO::AMFSerializer#write_amf3
+                      0.00      0.00      0.00                2/12     OpenStruct#inspect
+   0.00%   0.00%      0.00      0.00      0.00                  12     Module#to_s
+--------------------------------------------------------------------------------
+                      1.80      0.60      1.20       111126/111126     Kernel#__send__
+18000.00%6000.00%      1.80      0.60      1.20              111126     Logger#info
+                      1.20      0.67      0.53       111126/111130     Logger#add
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 4/4     Kernel#__send__
+   0.00%   0.00%      0.00      0.00      0.00                   4     Logger#debug
+                      0.00      0.00      0.00            4/111130     Logger#add
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00            4/111130     Logger#debug
+                      1.20      0.67      0.53       111126/111130     Logger#info
+12000.00%6700.00%      1.20      0.67      0.53              111130     Logger#add
+                      0.30      0.30      0.00       111130/111139     Kernel#nil?
+                      0.23      0.23      0.00       111130/147162     Fixnum#<
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     RUBYAMF::IO::AMFSerializer#write_amf3
+   0.00%   0.00%      0.00      0.00      0.00                   1     Kernel#to_s
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00            9/111139     RUBYAMF::IO::AMFSerializer#write_amf3
+                      0.30      0.30      0.00       111130/111139     Logger#add
+3000.00%3000.00%      0.30      0.30      0.00              111139     Kernel#nil?
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 3/3     OpenStruct#==
+   0.00%   0.00%      0.00      0.00      0.00                   3     Kernel#kind_of?
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00             1/90100     RUBYAMF::IO::AMFSerializer#write_amf3_object
+                      0.00      0.00      0.00            69/90100     RUBYAMF::IO::AMFSerializer#write_amf3
+                      0.17      0.17      0.00         90030/90100     Integer#upto
+1700.00%1700.00%      0.17      0.17      0.00               90100     Kernel#is_a?
+--------------------------------------------------------------------------------
+                      0.44      0.00      0.44                6/12     Hash#each
+                      0.00      0.00      0.00                4/12     Kernel#inspect
+                      0.32      0.00      0.32                1/12     RUBYAMF::IO::AMFSerializer#serialize
+                      0.00      0.00      0.00                1/12     Array#inspect
+7600.00%   0.00%      0.76      0.00      0.76                  12     Kernel#inspect
+                      0.00      0.00      0.00                 2/5     Hash#inspect
+                      0.00      0.00      0.00             6/69038     Fixnum#to_s
+                      0.30      0.00      0.30                 1/2     OpenStruct#inspect
+                      0.00      0.00      0.00            10/54067     String#inspect
+                      0.00      0.00      0.00                4/12     Kernel#inspect
+                      0.00      0.00      0.00            10/87065     Fixnum#==
+                      0.00      0.00      0.00                 1/1     TrueClass#to_s
+                      0.00      0.00      0.00                 2/2     #<Class:0x110bed0>#inspect
+                      0.76      0.06      0.70             10/9013     Array#inspect
+                      0.00      0.00      0.00             6/54057     Kernel#==
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 9/9     Array#each
+   0.00%   0.00%      0.00      0.00      0.00                   9     Kernel#eval
+                      0.00      0.00      0.00                 1/1     <Object::OpenStruct>#headers
+                      0.00      0.00      0.00                 1/1     <Object::OpenStruct>#body
+                      0.00      0.00      0.00                 1/1     <Object::OpenStruct>#timeToLive
+                      0.00      0.00      0.00                 1/3     <Object::OpenStruct>#_explicitType
+                      0.00      0.00      0.00                 1/1     <Object::OpenStruct>#destination
+                      0.00      0.00      0.00                 1/1     <Object::OpenStruct>#timestamp
+                      0.00      0.00      0.00                 1/1     <Object::OpenStruct>#clientId
+                      0.00      0.00      0.00                 1/1     <Object::OpenStruct>#messageId
+                      0.00      0.00      0.00                 1/1     <Object::OpenStruct>#correlationId
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                1/12     OpenStruct#to_s
+                      0.00      0.00      0.00                9/12     RUBYAMF::IO::AMFSerializer#write_amf3
+                      0.00      0.00      0.00                2/12     OpenStruct#inspect
+   0.00%   0.00%      0.00      0.00      0.00                  12     Kernel#class
+--------------------------------------------------------------------------------
+                      0.37      0.28      0.09        69096/180228     #<Class:0x110bed0>#<<
+                      0.00      0.00      0.00            4/180228     #<Class:0x11206f0>#debug
+                      2.40      0.60      1.80       111126/180228     #<Class:0x11206f0>#info
+                      0.00      0.00      0.00            2/180228     #<Class:0x110bed0>#inspect
+27700.00%8800.00%      2.77      0.88      1.89              180228     Kernel#__send__
+                      0.00      0.00      0.00                 4/4     Logger#debug
+                      0.09      0.09      0.00         69096/69150     String#<<
+                      1.80      0.60      1.20       111126/111126     Logger#info
+                      0.00      0.00      0.00             2/54067     String#inspect
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00             2/54057     Array#each
+                      0.00      0.00      0.00             1/54057     RUBYAMF::IO::AMFSerializer#write_amf3_object
+                      0.01      0.01      0.00          3027/54057     RUBYAMF::IO::AMFSerializer#write_amf3_string
+                      0.00      0.00      0.00             1/54057     ByteOrder#little?
+                      0.00      0.00      0.00             6/54057     Kernel#inspect
+                      0.05      0.05      0.00         33002/54057     Fixnum#==
+                      0.02      0.02      0.00         18018/54057     Array#inspect
+ 800.00% 800.00%      0.08      0.08      0.00               54057     Kernel#==
+--------------------------------------------------------------------------------
+                      0.00      0.59     -0.59           3001/3004     Array#each
+                      0.00      0.00      0.00              1/3004     RUBYAMF::IO::AMFSerializer#write_amf3_recordset
+                     33.09      0.00     33.09              2/3004     RUBYAMF::IO::AMFSerializer#serialize
+330900.00%5900.00%     33.09      0.59     32.50                3004     Integer#upto
+                      0.05      0.05      0.00         36012/36014     Array#[]
+                      0.00      0.00      0.00                 2/2     RUBYAMF::Util::BinaryString#write_utf
+                     33.09      0.00     33.09                 1/1     RUBYAMF::IO::AMFSerializer#write
+                      0.00      0.00      0.00                 1/1     RUBYAMF::AMF::AMFObject#get_body_at
+                      0.00      0.00      0.00                 1/1     BinaryWriterMixin#write_word32_network
+                     30.23      1.05     29.18         36012/39032     RUBYAMF::IO::AMFSerializer#write_amf3_string
+                      0.82      0.06      0.76         18006/66061     RUBYAMF::Util::BinaryString#write_byte
+                      0.17      0.17      0.00         90030/90100     Kernel#is_a?
+                      0.00      0.00      0.00                 1/1     RUBYAMF::IO::AMFSerializer#reset_referencables
+                      0.02      0.02      0.00           3003/6058     Array#<<
+--------------------------------------------------------------------------------
+                      0.12      0.12      0.00         66068/66068     Array#pack
+1200.00%1200.00%      0.12      0.12      0.00               66068     Integer#to_int
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     RUBYAMF::IO::AMFSerializer#write_amf3
+   0.00%   0.00%      0.00      0.00      0.00                   1     Hash#to_s
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     RUBYAMF::IO::AMFSerializer#write_amf3_object
+   0.00%   0.00%      0.00      0.00      0.00                   1     Hash#keys
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 3/5     Hash#each
+                      0.00      0.00      0.00                 2/5     Kernel#inspect
+   0.00%   0.00%      0.00      0.00      0.00                   5     Hash#inspect
+                      0.00      0.00      0.00             4/54067     String#inspect
+                      0.00      0.00      0.00             6/87065     Fixnum#==
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/4     RUBYAMF::IO::AMFSerializer#write_amf3_mixed_array
+                      0.22      0.00      0.22                 1/4     OpenStruct#to_s
+                      0.52      0.00      0.52                 2/4     OpenStruct#inspect
+7400.00%   0.00%      0.74      0.00      0.74                   4     Hash#each
+                      0.00      0.00      0.00            51/69150     String#<<
+                      0.00      0.00      0.00               27/27     Array#pop
+                      0.00      0.00      0.00                 3/5     Hash#inspect
+                      0.00      0.00      0.00               54/60     <Class::Thread>#current
+                      0.00      0.00      0.00               27/36     Symbol#to_s
+                      0.00      0.00      0.00            15/54067     String#inspect
+                      0.00      0.00      0.00                 3/3     NilClass#inspect
+                      0.44      0.00      0.44                6/12     Kernel#inspect
+                      0.00      0.00      0.00               54/60     Thread#[]
+                      0.00      0.00      0.00             27/6058     Array#<<
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                1/11     <Object::OpenStruct>#headers
+                      0.00      0.00      0.00                1/11     <Object::OpenStruct>#body
+                      0.00      0.00      0.00                1/11     <Object::OpenStruct>#timeToLive
+                      0.00      0.00      0.00                3/11     <Object::OpenStruct>#_explicitType
+                      0.00      0.00      0.00                1/11     <Object::OpenStruct>#destination
+                      0.00      0.00      0.00                1/11     <Object::OpenStruct>#timestamp
+                      0.00      0.00      0.00                1/11     <Object::OpenStruct>#clientId
+                      0.00      0.00      0.00                1/11     <Object::OpenStruct>#messageId
+                      0.00      0.00      0.00                1/11     <Object::OpenStruct>#correlationId
+   0.00%   0.00%      0.00      0.00      0.00                  11     Hash#[]
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     Array#each
+   0.00%   0.00%      0.00      0.00      0.00                   1     Hash#==
+--------------------------------------------------------------------------------
+                      0.01      0.01      0.00           3027/3029     RUBYAMF::IO::AMFSerializer#write_amf3_string
+                      0.00      0.00      0.00              2/3029     RUBYAMF::IO::AMFSerializer#write_amf3_integer
+ 100.00% 100.00%      0.01      0.01      0.00                3029     Fixnum#|
+--------------------------------------------------------------------------------
+                      0.07      0.07      0.00         33001/69038     RUBYAMF::IO::AMFSerializer#write_amf3_string
+                      0.00      0.00      0.00             1/69038     RUBYAMF::IO::AMFSerializer#write_amf3
+                      0.00      0.00      0.00             6/69038     Kernel#inspect
+                      0.06      0.06      0.00         36030/69038     RUBYAMF::IO::AMFSerializer#write_amf3_integer
+1300.00%1300.00%      0.13      0.13      0.00               69038     Fixnum#to_s
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 2/2     RUBYAMF::IO::AMFSerializer#write_amf3_integer
+   0.00%   0.00%      0.00      0.00      0.00                   2     Fixnum#>>
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     RUBYAMF::IO::AMFSerializer#write_amf3_number
+   0.00%   0.00%      0.00      0.00      0.00                   1     Fixnum#>=
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     RUBYAMF::IO::AMFSerializer#write_amf3_recordset
+   0.00%   0.00%      0.00      0.00      0.00                   1     Fixnum#>
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00             1/87065     Array#each
+                      0.00      0.00      0.00             3/87065     Array#include?
+                      0.00      0.00      0.00             6/87065     Hash#inspect
+                      0.16      0.11      0.05         33001/87065     RUBYAMF::IO::AMFSerializer#write_amf3_string
+                      0.00      0.00      0.00            10/87065     Kernel#inspect
+                      0.10      0.10      0.00         54044/87065     Array#inspect
+2600.00%2100.00%      0.26      0.21      0.05               87065     Fixnum#==
+                      0.00      0.00      0.00                 3/3     OpenStruct#==
+                      0.05      0.05      0.00         33002/54057     Kernel#==
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     RUBYAMF::IO::AMFSerializer#write_amf3_number
+   0.00%   0.00%      0.00      0.00      0.00                   1     Fixnum#<=
+--------------------------------------------------------------------------------
+                      0.08      0.08      0.00         36028/36028     RUBYAMF::IO::AMFSerializer#write_amf3_string
+ 800.00% 800.00%      0.08      0.08      0.00               36028     Fixnum#<<
+--------------------------------------------------------------------------------
+                      0.23      0.23      0.00       111130/147162     Logger#add
+                      0.04      0.04      0.00        36032/147162     RUBYAMF::IO::AMFSerializer#write_amf3_integer
+2700.00%2700.00%      0.27      0.27      0.00              147162     Fixnum#<
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00           3001/3004     Array#each
+                      0.00      0.00      0.00              1/3004     RUBYAMF::IO::AMFSerializer#write_amf3_recordset
+                      0.00      0.00      0.00              2/3004     RUBYAMF::IO::AMFSerializer#serialize
+   0.00%   0.00%      0.00      0.00      0.00                3004     Fixnum#-
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00           3001/3004     Array#each
+                      0.00      0.00      0.00              3/3004     RUBYAMF::IO::AMFSerializer#write_amf3_recordset
+   0.00%   0.00%      0.00      0.00      0.00                3004     Fixnum#+
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     RUBYAMF::IO::AMFSerializer#write_amf3_recordset
+   0.00%   0.00%      0.00      0.00      0.00                   1     Fixnum#*
+--------------------------------------------------------------------------------
+                      0.05      0.05      0.00         36034/36034     RUBYAMF::IO::AMFSerializer#write_amf3_integer
+ 500.00% 500.00%      0.05      0.05      0.00               36034     Fixnum#&
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/2     RUBYAMF::IO::AMFSerializer#write_amf3_recordset
+                     32.64      0.00     32.64                 1/2     RUBYAMF::IO::AMFSerializer#write_amf3_object
+326400.00%   0.00%     32.64      0.00     32.64                   2     Enumerable#each_with_index
+                     32.64      0.02     32.62                 2/2     Array#each
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     BinaryWriterMixin#write_word32_network
+   0.00%   0.00%      0.00      0.00      0.00                   1     ByteOrder#little?
+                      0.00      0.00      0.00                 1/1     <Module::ByteOrder>#byte_order
+                      0.00      0.00      0.00             1/54057     Kernel#==
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     Integer#upto
+   0.00%   0.00%      0.00      0.00      0.00                   1     BinaryWriterMixin#write_word32_network
+                      0.00      0.00      0.00             1/66068     Array#pack
+                      0.00      0.00      0.00                 1/1     ByteOrder#little?
+                      0.00      0.00      0.00             1/69096     RUBYAMF::Util::BinaryString#write
+                      0.00      0.00      0.00                 1/1     String#reverse!
+--------------------------------------------------------------------------------
+                      2.73      0.35      2.38         66061/66061     RUBYAMF::Util::BinaryString#write_byte
+27300.00%3500.00%      2.73      0.35      2.38               66061     BinaryWriterMixin#write_int8
+                      2.38      0.67      1.71         66061/66066     BinaryWriterMixin#pw
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 2/5     RUBYAMF::Util::BinaryString#write_utf
+                      0.00      0.00      0.00                 3/5     RUBYAMF::IO::AMFSerializer#serialize
+   0.00%   0.00%      0.00      0.00      0.00                   5     BinaryWriterMixin#write_int16_network
+                      0.00      0.00      0.00             5/66066     BinaryWriterMixin#pw
+--------------------------------------------------------------------------------
+                      2.38      0.67      1.71         66061/66066     BinaryWriterMixin#write_int8
+                      0.00      0.00      0.00             5/66066     BinaryWriterMixin#write_int16_network
+23800.00%6700.00%      2.38      0.67      1.71               66066     BinaryWriterMixin#pw
+                      0.54      0.42      0.12         66066/66068     Array#pack
+                      1.17      0.38      0.79         66066/69096     RUBYAMF::Util::BinaryString#write
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00               27/27     Hash#each
+   0.00%   0.00%      0.00      0.00      0.00                  27     Array#pop
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00             1/66068     BinaryWriterMixin#write_word32_network
+                      0.54      0.42      0.12         66066/66068     BinaryWriterMixin#pw
+                      0.00      0.00      0.00             1/66068     <Module::ByteOrder>#byte_order
+5400.00%4200.00%      0.54      0.42      0.12               66068     Array#pack
+                      0.12      0.12      0.00         66068/66068     Integer#to_int
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     RUBYAMF::IO::AMFSerializer#write_amf3_object
+   0.00%   0.00%      0.00      0.00      0.00                   1     Array#map
+                      0.00      0.00      0.00                9/36     Symbol#to_s
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/3     RUBYAMF::IO::AMFSerializer#write_amf3_recordset
+                      0.00      0.00      0.00                 1/3     RUBYAMF::AMF::AMFObject#num_outheaders
+                      0.00      0.00      0.00                 1/3     RUBYAMF::AMF::AMFObject#num_body
+   0.00%   0.00%      0.00      0.00      0.00                   3     Array#length
+--------------------------------------------------------------------------------
+                      0.76      0.06      0.70             10/9013     Kernel#inspect
+                      0.00      0.36     -0.36           9003/9013     Array#inspect
+7600.00%4200.00%      0.76      0.42      0.34                9013     Array#inspect
+                      0.22      0.22      0.00         54036/54067     String#inspect
+                      0.00      0.00      0.00                1/12     Kernel#inspect
+                      0.10      0.10      0.00         54044/87065     Fixnum#==
+                      0.02      0.02      0.00         18018/54057     Kernel#==
+                      0.00      0.36     -0.36           9003/9013     Array#inspect
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00             1/36029     RUBYAMF::IO::AMFSerializer#write_amf3_object
+                     23.13     11.96     11.17         36028/36029     RUBYAMF::IO::AMFSerializer#write_amf3_string
+231300.00%119600.00%     23.13     11.96     11.17               36029     Array#index
+                     11.17     11.17      0.00     5119851/5158892     String#==
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/3     OpenStruct#to_s
+                      0.00      0.00      0.00                 2/3     OpenStruct#inspect
+   0.00%   0.00%      0.00      0.00      0.00                   3     Array#include?
+                      0.00      0.00      0.00             3/87065     Fixnum#==
+--------------------------------------------------------------------------------
+                     32.64      0.02     32.62                 2/2     Enumerable#each_with_index
+326400.00% 200.00%     32.64      0.02     32.62                   2     Array#each
+                      0.00      0.00      0.00           5/5158892     String#==
+                      0.00      0.00      0.00           3001/3004     Fixnum#+
+                      0.33      0.03      0.30          3010/39032     RUBYAMF::IO::AMFSerializer#write_amf3_string
+                      0.00      0.00      0.00                 8/9     RUBYAMF::IO::AMFSerializer#write_amf3
+                      0.00      0.00      0.00           3001/3004     Fixnum#-
+                      0.00      0.59     -0.59           3001/3004     Integer#upto
+                      0.40      0.04      0.36          9004/66061     RUBYAMF::Util::BinaryString#write_byte
+                      0.00      0.00      0.00                 9/9     Kernel#eval
+                      0.00      0.00      0.00             1/87065     Fixnum#==
+                      0.00      0.00      0.00                 1/1     Hash#==
+                      0.00      0.00      0.00             2/54057     Kernel#==
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00             2/36014     RUBYAMF::AMF::AMFObject#get_body_at
+                      0.05      0.05      0.00         36012/36014     Integer#upto
+ 500.00% 500.00%      0.05      0.05      0.00               36014     Array#[]
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00             27/6058     Hash#each
+                      0.00      0.00      0.00              1/6058     RUBYAMF::IO::AMFSerializer#write_amf3_object
+                      0.00      0.00      0.00           3027/6058     RUBYAMF::IO::AMFSerializer#write_amf3_string
+                      0.02      0.02      0.00           3003/6058     Integer#upto
+ 200.00% 200.00%      0.02      0.02      0.00                6058     Array#<<
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     Kernel#eval
+   0.00%   0.00%      0.00      0.00      0.00                   1     <Object::OpenStruct>#timestamp
+                      0.00      0.00      0.00                1/11     Hash#[]
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     Kernel#eval
+   0.00%   0.00%      0.00      0.00      0.00                   1     <Object::OpenStruct>#timeToLive
+                      0.00      0.00      0.00                1/11     Hash#[]
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     Kernel#eval
+   0.00%   0.00%      0.00      0.00      0.00                   1     <Object::OpenStruct>#messageId
+                      0.00      0.00      0.00                1/11     Hash#[]
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     Kernel#eval
+   0.00%   0.00%      0.00      0.00      0.00                   1     <Object::OpenStruct>#headers
+                      0.00      0.00      0.00                1/11     Hash#[]
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     Kernel#eval
+   0.00%   0.00%      0.00      0.00      0.00                   1     <Object::OpenStruct>#destination
+                      0.00      0.00      0.00                1/11     Hash#[]
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     Kernel#eval
+   0.00%   0.00%      0.00      0.00      0.00                   1     <Object::OpenStruct>#correlationId
+                      0.00      0.00      0.00                1/11     Hash#[]
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     Kernel#eval
+   0.00%   0.00%      0.00      0.00      0.00                   1     <Object::OpenStruct>#clientId
+                      0.00      0.00      0.00                1/11     Hash#[]
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     Kernel#eval
+   0.00%   0.00%      0.00      0.00      0.00                   1     <Object::OpenStruct>#body
+                      0.00      0.00      0.00                1/11     Hash#[]
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 2/3     RUBYAMF::IO::AMFSerializer#write_amf3_object
+                      0.00      0.00      0.00                 1/3     Kernel#eval
+   0.00%   0.00%      0.00      0.00      0.00                   3     <Object::OpenStruct>#_explicitType
+                      0.00      0.00      0.00                3/11     Hash#[]
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 1/1     ByteOrder#little?
+   0.00%   0.00%      0.00      0.00      0.00                   1     <Module::ByteOrder>#byte_order
+                      0.00      0.00      0.00           1/5158892     String#==
+                      0.00      0.00      0.00             1/66068     Array#pack
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00               54/60     Hash#each
+                      0.00      0.00      0.00                2/60     OpenStruct#to_s
+                      0.00      0.00      0.00                4/60     OpenStruct#inspect
+   0.00%   0.00%      0.00      0.00      0.00                  60     <Class::Thread>#current
+--------------------------------------------------------------------------------
+   0.00%   0.00%      0.00      0.00      0.00                   1     #toplevel
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00            1/111126     RUBYAMF::IO::AMFSerializer#write_amf3_recordset
+                      0.00      0.00      0.00            4/111126     RUBYAMF::IO::AMFSerializer#write_amf3_object
+                      0.00      0.00      0.00            1/111126     RUBYAMF::IO::AMFSerializer#write_amf3_mixed_array
+                      0.00      0.00      0.00            1/111126     RUBYAMF::IO::AMFSerializer#write
+                      2.06      0.48      1.58        75060/111126     RUBYAMF::IO::AMFSerializer#write_amf3_string
+                      0.00      0.00      0.00           27/111126     RUBYAMF::IO::AMFSerializer#write_amf3
+                      0.00      0.00      0.00            1/111126     RUBYAMF::IO::AMFSerializer#reset_referencables
+                      0.00      0.00      0.00            1/111126     RUBYAMF::IO::AMFSerializer#write_amf3_number
+                      1.11      0.29      0.82        36030/111126     RUBYAMF::IO::AMFSerializer#write_amf3_integer
+31700.00%7700.00%      3.17      0.77      2.40              111126     #<Class:0x11206f0>#info
+                      2.40      0.60      1.80       111126/180228     Kernel#__send__
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 2/4     RUBYAMF::IO::AMFSerializer#write_amf3_object
+                      0.00      0.00      0.00                 2/4     RUBYAMF::IO::AMFSerializer#serialize
+   0.00%   0.00%      0.00      0.00      0.00                   4     #<Class:0x11206f0>#debug
+                      0.00      0.00      0.00            4/180228     Kernel#__send__
+--------------------------------------------------------------------------------
+                      0.00      0.00      0.00                 2/2     Kernel#inspect
+   0.00%   0.00%      0.00      0.00      0.00                   2     #<Class:0x110bed0>#inspect
+                      0.00      0.00      0.00            2/180228     Kernel#__send__
+--------------------------------------------------------------------------------
+                      0.81      0.44      0.37         69096/69096     RUBYAMF::Util::BinaryString#write
+8100.00%4400.00%      0.81      0.44      0.37               69096     #<Class:0x110bed0>#<<
+                      0.37      0.28      0.09        69096/180228     Kernel#__send__
+
+

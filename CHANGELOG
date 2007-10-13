@@ -1,0 +1,227 @@
+--changes 1.3.4
+#single mysql records are ALWAYS returned as an object, not wrapped in an array anymore.
+#single active records are ALWAYS returned as an object. No use for as_single! anymore. Note there is a deprecation warning if you use it.
+#fixed small bug with incoming VO names. EI this wouldn't work: ValueObjects.regier({:incoming=>'vo.SectionVO',:map_to=>'Section',:outgoing=>'vo.SectionVO'}). Note that the package always get's truncated in situation like this. So this would be in the params hash as params[:sectionvo].
+#added case translations for value objects. You can translate incoming lowerCamelCase to snake_case, and outgoing snake_case to lowerCamelCase. See configuration for value objects. (ValueObjects.translate_case)
+#added setRemoteCredentials support.
+#added "credentials" method to ActionController::Base. Anytime you set credentials with "setRemoteCredentials" or "setCredentials" in Flex, this method will return a hash with {username:'username',password:'mypassword'}.
+#fixed issue with returned value objects that had :belongs_to association, it now correctly returns an object, not wrapped in any array anymore.
+#changed read_write so it doesn't crash in production when setCredentials is set. When in production mode the exception message was different in different modes.
+#fixed debug player issues. It correlates to the rails modes. An error that was happening while reading integers was raising errors, but the message was different per mode, so a regex I was using to sniff it was not catching it in production mode.
+#added initial :through support
+#added magic_field ignorance. Incoming VO's magic field members are ignored. Currently magic fields are "created_at","created_on","updated_at","updated_on"
+#Rails no longer complains about missing views for RubyAMF requests.
+#added ParamMapping for mapping incoming remoting parameters into rails' params hash
+
+--changes 1.3.3b
+#updated rails parameter mapping for sending generic objects from flash/flex
+
+--changes 1.3.3a
+#gook out references to amf_id in serializer
+#reverted a condition in the util/action_controller that was breaking new/create/edit/update action controller methods, after a remoting call had been made
+
+--changes 1.3.3
+#updated the ActiveRecord::Base.update_nil_associations method. Added the 3rd open struct param. Which takes the original incoming ValueObject, and set's any similar associated model properties to the same values that are being assigned to the hash association properties. This was causing an issue with some models, not all. Not sure what the qualifications were for this being an issue, but it's fixed.
+#fixed incoming AMF stream object references when reading Objects.
+#Fixed outgoing AMF stream object references.
+
+--changes
+1.3.2b
+#Updated VoUtil again for incoming VO's. If any properties are nil, they're now deleted out of the open struct so that the resulting update hash for active record doesn't put in NULL into the database.
+
+--changes 1.3.2a
+#put a fix in VoUtil to handle incoming "update VO", if the created_at or updated_at is nil it's not updated.
+
+--changes 1.3.2
+#added AMF0 / AMF3 NaN support ("NaN" constant in ruby)
+#added AMF3 Infinity support ("Infinity" constant in ruby)
+#added AMF3 -Infinity support ("NInfinity" constant in ruby)
+#added BigDecimal support
+#added isNaN Top Level function (has alias of isNaN?)
+#added isFinite Top Level function (has alias of isFinite?)
+#added some better logic for incoming VO -> params[:] mapping. Now the first incoming VO properties get merged into the params hash. Thus params[:id] will work. (enabling update,edit,destroy scaffolding methods)
+#put a rescue_action in the rubyamf_controller. This needs to be piped back to flash yet. This is the only case where exceptions can't get returned to the player.
+#took out ValueObjects.rails_parameter_mapping_type. It is always 'update_hash', not really needed anymore.
+#changed recordset_format default to be FL9
+#Handled bug with Date/Time/DateTime not writing as correct reference to other Date's in the AMF stream, (if the same date was being returned, it would write a reference, but writing references to dates does not work correctly in the player)
+#fixed final friggin 'id' property problems. All id attributes come through correctly now, (both ways).
+
+--changes 1.3.1
+#added Adapters.deep_adaptations See an adapters_config file for more information.
+
+--changes 1.3 FINAL
+#added more logic for incoming nil/undefined/empty associated active_record model data. Was a few cases when it wouldn't work correctly (see util/active_record#update_nil_associations)
+#add util/active_record#update_nans which updates any hash values that are NaN, turns them into nil
+#updated AS3FaultObject, no regex was needed in it anymore
+
+--changes 1.3 revision 756
+#Fixed bug when taking incoming VO's and mapping them to AR. I wasn't dealing with an :incoming class path (such as vo.Task). Now I strip off the class path and just use the class. (Task.downcase). This was causing the VO to be put in params['vo.Task']. Dah.
+#Fixed slight problem with incoming VO's and nil associated model data. If an incoming associated model was nil it was automatically becoming an Array. It's handled a little more graceful with ActiveRecord reflections to find out what an incoming nil members real value should be (Array / nil). If :has_many, val == []. If :belongs_to, val == nil, if :has_and_belongs_to_many, val = []
+#created_at and updated_at now work correctly according to ActiveRecord, because of the above bug fix.
+#took out puts in mysql_adapter
+#updated rails installer. It won't overwrite vo_config / adapter_config if it exists.
+
+--changes 1.3 RC2 revision 748
+#Added in FaultObject handling when sending back FaultObjects from Controller's, it had been stripped out when rewriting the rails plugin.
+#split vo / adapter configs into two files, now the configs live in rails/config/rubyamf. For LITE, the configs are now in rubyamf/services/config/
+#added ValueObjects.rails_parameter_mapping_type, to specify what get's put into params[:[voclass]]. Read the vo_config file fore more information
+
+--changes 1.3 RC2 revision 742
+#changed service.is_amf / service.is_rubyamf to 'false' after the service call to rails controller
+#gzip works now, strange as I didn't change anything specifically for it
+
+--changes 1.3 RC2
+#fixed Rails production environment problem
+#full controller support
+#added crossdomain.xml file to rails installer, now copies crossdomain to rails/public.
+#fixed RemoteObject fault handler executions for AsyncTokens.
+#took out two return statements in BatchFilter, as it should continue through the batch process.
+#re-wrote the rails plugin again. Now has full controller support, and does not harm with production enviornment.
+#util/action_controller_run_target no longer valid, see util/active_record, and util/action_controller.
+#changed the "inner" ActionController requests HTTP_ACCEPT header to accept application/x-amf, to enable the respond_to method to work properly
+
+--changes 1.3 RC1
+#rewrote rubyamf_core/adapters/active_record_adapter.rb to be recursive. Now handles VO mapping, and associated models when using :include
+#rewrote rubyamf_core/app/rails_gateway.rb. It now extends the normal gateway and just changes out the actions
+#completed VO mappings
+#added a fix in core/io/read_write.rb for a case when Rails would truncate the last \000 byte from AMF data. That was in Rails' ActionPack gem ActionController -> raw_post_data_fix.rb
+#Added @is_rubyamf to controllers.
+#added VoUtil class
+#added "as_single!", "single!" and "single?" helper to active record. See wiki.rubyamf.org/wiki/show/ActiveRecordSingles for more information about this
+#added util/active_record.rb. This implementes the single! method and single? method (single? is used internally to RubyAMF) See wiki.rubyamf.org/wiki/show/ActiveRecordSingles for more information about this
+#added util/openstruct.rb. #This is a fix for Object#id problems
+#added util/object.rb #this is a fix for Object#id problems
+#updated the VoUtil class for ActiveRecord VO instantiation
+#added ApplicationInitializationAction. This is used for RubyAMF lite when using AR VO's. (AR needs to be connected before incoming VO's can be turned into AR's)
+#added capability to change the rubyamf configuration file path
+#added ApplictionInstanceInitAction for configuration processing, and pre-emptive ActiveRecord connecting for ActiveRecord Value Object handling
+#added getActiveRecordFromOpenStruct, for incoming VO usage.
+#changed all mappings variables to use the new ValueObjects class in configuration.rb
+#added makeHashFromOpenStruct, used in combination with getActiveRecordFromOpenStruct.
+#changed deserializer ValueObject mapping to include the new ActiveRecord Value Object mapping functionality
+#updated the active_record_connector helper. updated so I can use it in ApplicationInitInstanceAction.
+#rails installer now copies rubyamf_core/app/default_rails_config into rails/config/rubyamf_config.rb.
+--#added active record error handling, return an active record with errors and it sends back the first error in the errors hash as a string (EX: "login already taken")
+--#thread safety
+--#re-wrote rails plugin as to not break everything when in production environment
+
+--changes 1.2
+####RAILS
+#rails installer (ruby script/plugin install svn://rubyforge.org/var/svn/rubyamf/tags/current/rubyamf)
+#support for respond_to/format.amf { render :amf => content }. You must add a mime type into railsapp/config/environment.rb (Mime::Type.register "application/x-amf", :amf)
+See the page http://wiki.rubyamf.org/wiki/show/AmfRest for more info
+#took out some puts statements
+
+--changes 1.1
+#FaultObjects cannot be "raised" from service methods, they must be returned. If raised, a custom error message tells you not to.
+#cleaned up some authentication code, less logic
+#the recordset_format header values are now 'fl8' and 'fl9'. fl.data.DataProvider and mx.remoting.RecordSet are still in there. But fl8 and fl9 make more sense.
+#added the -r commandline switch. If this is on services are reloaded when executed.
+#Fixed an issue with recordsets. Was another slight logic issue that decided to use flash 8 / 9 or flex 2 FDS recordsets.
+
+####Rails
+#fixed sessions variable in controller classes
+#fixed cookies variable in controller classes
+
+--changes 1.0 final
+#####Rails Plugin
+#initial rails plugin
+#added rubyamf_controller.rb intro services. This is intended to be put in app/controllers as the RubyAMF gateway for Rails.
+#@is_amf available in any controller method
+#get_credentials() for authentication
+#parameter[] hash mapping, remoting params get into params[]
+#allow_after_filters
+#most filters work, all but 'around' filters
+######RubyAMF App server
+#Fixed daemonizing bug for Mongrel
+#added authentication back in
+#added predefined_variables in rubyamf/services as documentation for available top level variables.
+
+
+--changes 0.9.8
+#Fix RecordSet with Flash 9 issue. Results sets were being returned to Flash 9 as mx.remoting.RecordSet. Now it's returned as fl.data.DataProvider.
+#Added custom recordset_format header support. You can change the recordset format by adding the appropriate header to the netconnection. EX: service.addHeader('recordset_format:fl.data.DataProvider',false,false); OR service.addHeader('recordset_format:mx.remoting.RecordSet',false,false);
+#Made sure the _explicitType member variable isn't being written in the actionscript object when serializing AF3 or AMF0
+#added db_error_logger helper class. Use for easily logging errors in services
+#added error_notification class. Use for sending emails when errors happen, Note this is just stub code for now
+
+
+--changes 0.9.7
+#Fixed more object/array issues with AMF0 and AMF3
+#Fixed AMF0 custom VO class mappings. VO class path: /rubyamf/services/vo (use Object.registerClass from Flash)
+#Changed AMF0 objects into OpenStructs to match AMF3 objects
+#Got rid of ASObject class, not needed anymore
+#Took out heavy delegation to Binary Reader/Writer mix-ins. Was generally about 3-5 method calls before any actual write/read operation was happening. Performance Performance Performance! Now there is one read_write mixin in the de/serializers. One method call to perform the operation.
+
+--changes 0.9.6
+#Fixed an issue where AMF3 was being sent, but it was being treated as Flex Messaging, should have been straight AMF3.
+#Fixed an issue with reading / writing mixed AMF3 arrays and objects. Sending arrays with mixed keys was breaking it. Sending "Objects" from Flash was breaking.
+
+--changes 0.9.5
+#mongrel http servlet now available
+#active_record_adapter (confirmed)
+#firebird_fireruby_adapter (untested)
+#hypersonc_adater (untested)
+#lafacadio adapter (untested but logic was from lafcadio developer)
+#lore_adapter (untested but logic is from lore developer)
+#mysql_adapter (confirmed)
+#object_graph_adapter (untested but logic was from OG developer)
+#oracle_oci8_adapter (untested)
+#postgres_adapter (untested)
+#ruby_dbi_adapter (untested)
+#sequel_adapter (untested but logic is from sequel developer)
+#sqlite_adapter (untested)
+#Refactored  app/request_store
+#updated order of server meta info when starting lighttpd
+#updated some variable names in optparser to match flag names
+#took out all internal RubyAMF logging.
+#added custom faultObject helper (services/rubyamf/helpers/fault_object)
+#added active_record_connector helper module (services/rubyamf/helpers/active_record_connector)
+#Changed adapter implementation. Now each adapter you have in the settings is loaded and you can use the "use_adapter?" hook method - place logic in there that decides if the result qualifies to be "adapted" into whatever adapter type. You can copy the mysql_adapter or any other file in the adapters file.
+#Updated de/serializers for unit testing capabliities. Now you can call either read_raw or write_raw on AMFDeserializer / AMFSerializer respectivly. And this allows you to read/write "pieces" of data. This is only for unit testing the AMF IO capabilities. Two new methods are used internal for RubyAMF; rubyamf_read, and rubyamf_write. These are specifically for doing complete AMF request operations
+#took out sessions
+#took out authentication
+#code optimizing, lots of comments and fluff taken out
+
+--changes 0.9.1
+#Fixed bug when reading byte array's with AMF3.
+
+--changes 0.9.0a
+#changed services location outside of docroot for security reasons. Now public is for accessing gateways only.
+#Added a case for DateTime in serialization.
+#Fixed up AMF3 Date handling
+#AMF3 Dates are now passed to your service as a DateTime object. This is to keep the time as well
+#Date / Time / DateTime are now serializing correctly to AMF3 Date. Date truncates H:M:S, Time and DateTime keep a hold of the time as well
+#Updated AMF3 deserializing, now DateTime instead
+#Updated some startup logic to get rid of redundant STDOUT statements
+#Updated some commandline option comments
+#READEME - updated email
+#Changed license from MIT to GNU GPLv2
+
+---changes 0.8.9
+#Updated AS3 recordset serialization to handle dates (from db)
+#Updated AS3 recordset serialization to handle nil (from db)
+#Updated ResultAdapterAction to handle single activeRecords, they were working in some cases. sometimes not.. Not sure how they were working as they shouldn't have been
+
+---changes - 0.8.8
+#added s simple check for amf content vs a browser request.. (navigate to localhost:8024/gateway.rb) and see a message
+#Added some some html messages if browsed to the gateway location
+#updated LightTPD config to deny the services directory
+#updated the WEBrickServlet Document Root to point to /public/.
+#updated how each gateway checks for amf content VS a browser request. 
+
+---changes - 0.8.7
+#sessions are now off by defult, turn them on with -r commandline switch
+#@session instance variable is now injected into service methods
+#Added @session.inspect method. intended use is inside a service method, if you want to NetDebug.Trace(@session.inspect). It will return only the session data not the entire session object
+#@sessions_enabled is injected into the service class. Intended use is so you can avoid exceptions when sessions aren't enabled (if(@sessions_enabled)) etc.
+#fixed issue with session toggling, (was not initializing correctly) causing every request to make a new session
+#changed session persistence to be after any invocation. In case you set session vars in your service method, they need to be persistent. (only if sessions are enabled)
+#added silencer to startup, add test if lighttpd exists
+#NetDebug.Trace(msg) is gracefuly shut off when in amf3 mode, as it causes a 
+#Sessions are gracefully shut off in amf3 mode. (if -r was used at startup)
+#took out any reference to 'DB' when talking about adapters, as any result can be adapted
+#shifted in the RequestStore.SERVICE_PATH to $:. When using require in a service, start from where the top of the declared service directory
+#minor benchmarking and profiling, this things pretty fast.
+#Added RUBYAMF_SERVICES global var. This is for services when using the require statement. If you need to require anything of your own, use this is the prefix, then build from there. As usually you'll need to require rubygems. But rubygems screws with the load path. So chances are everything will error out if you don't use this new variable.
+
