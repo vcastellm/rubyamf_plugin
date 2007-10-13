@@ -50,3 +50,10 @@ ValueObjects.translate_case = false
 # . represents object notation.
 # So you could do this: "{0}{0}.users{5}.firstname" and it will take the value 
 # from your remoting parameters: [0][0].users[5].firstname
+
+# MAPPINGS GO HERE:
+# Parameter::Map.register({
+#   :controller => :UserController,
+#   :action => :find_friend,
+#   :params => { :friend => "{0}.friend" }
+# })
