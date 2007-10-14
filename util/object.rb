@@ -4,6 +4,9 @@ class Object
   attr_accessor :id
     
   def get_members
+    if self.inspect.to_s.match(/^:[a-zA-Z]/)
+      return []
+    end
     if self.rmembers != nil
       if self.id != nil
         self.rmembers << 'id'
