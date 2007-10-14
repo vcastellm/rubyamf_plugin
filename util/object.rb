@@ -14,7 +14,7 @@ class Object
       return self.rmembers
     end
     
-    members = obj.instance_variables.map{|mem| mem[1,mem.length]}
+    members = self.instance_variables.map{|mem| mem[1,mem.length]}
     if self.id != nil
       members << 'id'
     end
