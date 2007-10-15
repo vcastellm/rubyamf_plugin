@@ -15,6 +15,7 @@
 #added ParamMapping for mapping incoming remoting parameters into rails' params hash.
 #Rewrote active record adapter. Everything is done with the usual recursion, but also with reflections. Allows a 1:1 VO to AR.
 #Squeezed every possible millisecond out of the active record adapter. It's slightly faster, were talking 10's - 100's of milleseconds. The speed increase varies depending on the complexity of your result.
+#took out recordset_format header. not needed anymore.
 
 --changes 1.3.3b
 #updated rails parameter mapping for sending generic objects from flash/flex
