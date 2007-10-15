@@ -44,7 +44,7 @@ class ActiveRecordAdapter
   #utility method to find associations that were actually included in the query (":include")
   def active_associations(ar,reflections)
     na = []
-    aa = ar.active_associations
+    aa = ar.instance_variables
     reflections.each do |reflect|
       a = reflect[1]
       if aa.include?("@" + a.name.to_s)
