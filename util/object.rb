@@ -2,6 +2,7 @@ class Object
   attr_accessor :_explicitType
   attr_accessor :rmembers
   attr_accessor :id
+  attr_accessor :type
     
   def get_members
     if self.inspect.to_s.match(/^:[a-zA-Z]/)
