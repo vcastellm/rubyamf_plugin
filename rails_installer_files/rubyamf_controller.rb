@@ -63,7 +63,7 @@ class RubyamfController < ActionController::Base
   		  amf_response = "<html><head><title>RubyAMF Gateway</title>
   		  <style>body{margin:0;padding:0;font:12px sans-serif;color:#c8c8c8}td{font:12px sans-serif}</style>
   		  </head><body bgcolor='#222222'>
-  		  <table width='100%' border=1 align=center valign=middle height='100%'>
+  		  <table width='100%' align=center valign=middle height='100%'>
   		  <tr><td width=100 align=center>
   		  <a href='http://blog.rubyamf.org'><img border=0 src='http://blog.rubyamf.org/images/gateway.png' /></a>"
   		else
