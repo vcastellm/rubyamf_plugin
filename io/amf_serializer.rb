@@ -346,8 +346,14 @@ class AMFSerializer
         if v == '_explicitType' || v == 'rmembers'
           next #skip _explicitType member, will cause ReferenceErrors
         end
+        
+        prop = v
+        if v != 'timeToLive' && v != 'clientId' && v != 'correlationId' && v != 'messageId'
+          prop = ValueObjects.translate_case ? v.camlize(:lower) : v
+        end
+        
         val = eval("value.#{v}")
-        write_amf3_string(v)
+        write_amf3_string(prop)
         if(val == nil)
           write_byte(AMF3_NULL)
         else
