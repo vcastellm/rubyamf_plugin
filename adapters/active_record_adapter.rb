@@ -28,6 +28,15 @@ class ActiveRecordAdapter
     ob
   end
   
+  #this must be used for any open structs in the serializer. This is the only way I've found to bypass Object#id deprecation warnings.
+  def safe_open_struct
+    o = OpenStruct.new
+    class << o
+      attr_accessor :id
+    end
+    o
+  end
+  
   #utility method for checking deathly empties
   def is_empty?(ar)
     empty = false
@@ -80,7 +89,7 @@ class ActiveRecordAdapter
         write_multiple(ar, payload, associations)
       end
     elsif is_single?(ar)
-      payload = OpenStruct.new
+      payload = safe_open_struct
       associations = active_associations(ar, ar.class.reflections)
       if(is_empty?(associations))
         write_attributes(ar,payload)
@@ -110,7 +119,7 @@ class ActiveRecordAdapter
   def write_multiple_no_reflections(ar,payload)
     ar.each_with_index do |record,i|
       #write attributes on this object
-      attributes_holder = OpenStruct.new
+      attributes_holder = safe_open_struct
       payload[i] = write_attributes(ar[i],attributes_holder)
     end
     payload
@@ -119,7 +128,7 @@ class ActiveRecordAdapter
   def write_multiple(ar, payload, associations)
     ar.each_with_index do |record,i|
       #write attributes on this object
-      attributes_holder = OpenStruct.new
+      attributes_holder = safe_open_struct
       payload[i] = write_attributes(ar[i],attributes_holder)
       associations.each do |association|
         #association is an ActiveRecord::Reflection::MacroReflection class
