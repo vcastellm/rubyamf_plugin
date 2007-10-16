@@ -161,11 +161,11 @@ class Parameter
       return str
     end
     
-    def self.update_request_parameters(controller,action,railsparams,remotingparams)
+    def self.update_request_parameters(target_uri,railsparams,remotingparams)
       begin
         maps = []
         @@maps.each do |map|
-          if map[:controller] == controller.to_sym && map[:action] == action.to_sym
+          if ("#{map[:controller].to_s}.#{map[:action]}") == target_uri
             maps << map
           end
         end
@@ -173,7 +173,15 @@ class Parameter
         maps.each do |var|
           var[:params].each do |k,v|
             accessor = self.eval_string(v)
-            railsparams[k.to_sym] = eval("remotingparams#{accessor}")
+            val = eval("remotingparams#{accessor}")
+            railsparams[k.to_sym] = val
+            if val.is_a?(ActiveRecord::Base) && val.id != nil && val.id != 'NaN' && val.id != NaN && val.id != 'undefined'
+              #first put the update parameters in to the hash, then add the right id
+              railsparams[k.to_sym] = val.original_vo_from_deserialization.to_hash
+              railsparams[k.to_sym][:id] = val.id
+            elsif val.is_a?(ActiveRecord::Base) && (val.id == nil || val.id = 'NaN' || val.id == 'undefined')
+              railsparams[k.to_sym] = val.original_vo_from_deserialization.to_hash
+            end
           end
         end
       rescue Exception => e
