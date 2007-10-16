@@ -7,7 +7,7 @@
 # This only matters if you're using VO's that aren't of type active_record
 ValueObjects.vo_path = 'app'
 
-#=> Value Object Definitions
+#=> VALUE OBJECT DEFINITIONS
 # A Value Object definition conists of at least these three properties:
 # :incoming   #If an incoming value object is an instance of this type, the VO is turned into whatever the :map_to key specifies
 # :map_to     #Defines what object to create if an incoming match is made.
@@ -32,7 +32,6 @@ ValueObjects.vo_path = 'app'
 #ValueObjects.register({:incoming => 'Address', :map_to => 'Address', :outgoing => 'Address', :type => 'active_record'})
 
 
-##################################
 #=> CASE TRANSLATIONS
 # Most actionscript uses camel case instead of snake case. Set ValueObjects.translate_case to true if want translations to occur.
 # An incoming property like: myProperty gets turned into my_property
@@ -40,9 +39,7 @@ ValueObjects.vo_path = 'app'
 ValueObjects.translate_case = false
 
 
-##################################
 #=> INCOMING REMOTING PARAMETER MAPPINGS
-#
 # Incoming Remoting Parameter mappings allow you to map an incoming requests parameters into rails' params hash
 # Here's an example:
 # Parameter::Map.register({
