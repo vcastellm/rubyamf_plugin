@@ -172,7 +172,7 @@ class Parameter
         if maps.empty? then return nil end
         maps.each do |var|
           var[:params].each do |k,v|
-            accessor = self.eval_string(v)
+            accessor = self.eval_string(v.clone)
             val = eval("remotingparams#{accessor}")
             railsparams[k.to_sym] = val
             if val.is_a?(ActiveRecord::Base) && val.id != nil && val.id != 'NaN' && val.id != NaN && val.id != 'undefined'
