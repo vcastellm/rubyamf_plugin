@@ -1,8 +1,14 @@
 ##################################
 #=> VALUE OBJECT CONFIGURATION
-#=> Global and Application Instance Specific
 #
-#=> A Value Object definition conists of at least these three properties:
+# vo_path defines the search location for incoming VO's that aren't of type active_record.
+# For example, if you defined a class as [RemoteClass(alias="vo.MyVO")], there should be a ruby
+# fil in app/vo/MyVO.rb. The path is defined like so:  RAILS_ROOT + vo_path + remote_class_package
+# This only matters if you're using VO's that aren't of type active_record
+ValueObjects.vo_path = 'app'
+
+#=> Value Object Definitions
+# A Value Object definition conists of at least these three properties:
 # :incoming   #If an incoming value object is an instance of this type, the VO is turned into whatever the :map_to key specifies
 # :map_to     #Defines what object to create if an incoming match is made.
 #             #If a result instance is the same as the :map_to key, it is sent back to Flex / Flash as an :outgoing
@@ -10,13 +16,12 @@
 #
 #=> Optional value object properties:
 # :type       #Used to spectify the type of VO, valid options are 'active_record', 'custom',  (or don't specify at all)
-# :instance   #tells RubyAMF Lite to use this value object only if the incmoing request was under that application instances scope. (this is for RubyAMF Lite only)
 #
 # If you are using ActiveRecord VO's you do not need to specify a fully qualified class path to the model, you can just define the class name, 
 # EX: ValueObjects.register({:incoming => 'Person', :map_to => 'Person', :outgoing => 'Person', :type => 'active_record'})
 #
 # If you are using custom VO's you would need to specify the fully qualified class path to the file
-# EX: ValueObjects.register({:incoming => 'Person', :map_to => 'org.mypackage.Person', :outgoing => 'Person'})
+# EX: ValueObjects.register({:incoming => 'Person', :map_to => 'org.mypackage.Person', :outgoing => 'Person'}) (see above about vo_path)
 #
 #=> RubyAMF Internal Knowledge of your VO's
 # If your VO's aren't active_records, there are two instance variables that are injected to your class so that RubyAMF knows what they are.
