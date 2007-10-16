@@ -1,44 +1,44 @@
 require 'ostruct'
-
 class ActiveRecordAdapter
   
-  #should we use this adapter for the result type
   def use_adapter?(results)
-    if(use_multiple?(results) || use_single?(results))
+    if(is_many?(results) || is_single?(results))
       return true
     end
     false
   end
   
-  #run the results through this adapter
   def run(results)
-    res1 = results
-
-    if(use_multiple?(results))
-      results = run_multiple(results)
-    else
-      results = run_single(results)
-    end
-    return results
+    result_object = self.walk(results)
+    return result_object
   end
-
-  def get_reflected_attributes(res1, o)
-    if (associations = res1.get_associates) == nil then associations = Array.new end
-    if res1.class.reflections.keys.size > 0
-      res1.class.reflections.keys.each do |x|
-        obj="#{x}"
-        unless associations.include?('@'+obj)
-          through_data = Array.new
-          is_through = res1.send(x)
-          if !is_empty?(is_through)
-            use_single?(is_through) ? through_data = run_single(is_through) : through_data = run_multiple(is_through)
-          end
-          eval("o.#{obj}=through_data")
-        end
-      end
+  
+  #utility method for writing attributes on an active record
+  def write_attributes(ar,ob)
+    columns = ar.attributes.map{|k,v| k}
+    columns.each_with_index do |column,i|
+      val = ar.send(:"#{column}")
+      prop = ValueObjects.translate_case ? column.camlize(:lower) : column
+      eval("ob.#{prop}=val")
     end
+    #turn the outgoing object into a VO if neccessary
+    map = VoUtil.get_vo_definition_from_active_record(ar.class.to_s)
+    if map != nil
+      ob._explicitType = map[:outgoing]
+    end
+    ob
   end
-
+  
+  #this must be used for any open structs in the serializer. This is the only way I've found to bypass Object#id deprecation warnings.
+  def safe_open_struct
+    o = OpenStruct.new
+    class << o
+      attr_accessor :id
+    end
+    o
+  end
+  
+  #utility method for checking deathly empties
   def is_empty?(ar)
     empty = false
     if ar.is_a?(Array)
@@ -50,161 +50,98 @@ class ActiveRecordAdapter
     return empty
   end
 
-
+  #utility method to find associations that were actually included in the query (":include")
+  def active_associations(ar,reflections)
+    na = []
+    aa = ar.instance_variables
+    reflections.each do |reflect|
+      a = reflect[1]
+      if aa.include?("@" + a.name.to_s)
+        na << a
+      end
+    end
+    na
+  end
+  
   #is the result an array of active records
-  def use_multiple?(results)
+  def is_many?(results)
     if(results.class.to_s == 'Array' && results[0].class.superclass.to_s == 'ActiveRecord::Base')
       return true
     end
     false
   end
-
+  
   #is this result a single active record?
-  def use_single?(results)
+  def is_single?(results)
     if(results.class.superclass.to_s == 'ActiveRecord::Base')
       return true
     end
     false
-  end 
-
-  #run the data extaction process on an array of AR results
-  def run_multiple(um)
-    initial_data = []
-    column_names = um[0].get_column_names
-    num_rows = um.length
-    
-    c = 0
-    0.upto(num_rows - 1) do
-      o = OpenStruct.new
-      class << o
-        attr_accessor :id
-      end
-      
-      #turn the outgoing object into a VO if neccessary
-      map = VoUtil.get_vo_definition_from_active_record(um[0].class.to_s)
-      if map != nil
-        o._explicitType = map[:outgoing]
-      end
-      
-      #first write the primary "attributes" on this AR object
-      #no need for an index 
-      column_names.each do |v|
-        val = um[c].send(:"#{v}")
-        vo_property = ValueObjects.translate_case ? v.camlize(:lower) : v
-        eval("o.#{vo_property}=val")
-      end
-      
-      associations = um[0].get_associates
-      if(!associations.empty?)
-        #now write the associated models with this AR
-        associations.each do |associate|
-          na = associate[1, associate.length]
-          ar = um[c].send(:"#{na}")         
-          if !is_empty?(ar)
-            if(use_single?(ar))
-              initial_data_2 = run_single(ar)   #recurse into single AR method for same data structure
-            else
-              initial_data_2 = run_multiple(ar) #recurse into multiple AR method for same data structure
-            end
-            eval("o.#{na}=initial_data_2")
-            get_reflected_attributes(um[c], o)
-          end
-        end
-      end
-      c += 1
-      initial_data << o
-    end
-    initial_data
   end
   
-  #run the data extraction process on a single AR result
-  def run_single(us)
-    initial_data = []
-    column_names = us.get_column_names
-    num_rows = 1
-    
-    c = 0
-    0.upto(num_rows - 1) do
-      o = OpenStruct.new
-      class << o
-        attr_accessor :id
+  #recursive result traversing.
+  def walk(ar)
+    if is_many?(ar)
+      payload = []
+      associations = active_associations(ar[0], ar[0].class.reflections)
+      if(is_empty?(associations))
+        write_multiple_no_reflections(ar,payload)
+      else
+        write_multiple(ar, payload, associations)
       end
-
-      #turn the outgoing object into a VO if neccessary
-      map = VoUtil.get_vo_definition_from_active_record(us.class.to_s)
-      if map != nil
-        o._explicitType = map[:outgoing]
+    elsif is_single?(ar)
+      payload = safe_open_struct
+      associations = active_associations(ar, ar.class.reflections)
+      if(is_empty?(associations))
+        write_attributes(ar,payload)
+      else
+        write_single(ar,payload,associations)
       end
-      
-      #first write the primary "attributes" on this AR object
-      column_names.each do |v|
-        val = us.send(:"#{v}")
-        vo_property = ValueObjects.translate_case ? v.camlize(:lower) : v
-        eval("o.#{vo_property}=val")
+    end    
+    payload
+  end
+  
+  def write_single(ar, payload, associations)
+    write_attributes(ar, payload)
+    associations.each do |association|
+      #association is an ActiveRecord::Reflection::MacroReflection class
+      model = association.name.to_s
+      association_value = ar.send(:"#{model}")
+      if is_empty?(association_value)
+        next
       end
-      
-      associations = us.get_associates
-      if(!associations.empty?)
-        #now write the associated models with this AR
-        associations.each do |associate|
-          na = associate[1, associate.length]
-          ar = us.send(:"#{na}")          
-          if !is_empty?(ar)
-            if(use_single?(ar))
-              initial_data_2 = run_single(ar)   #recurse into single AR method for same data structure
-            else
-              initial_data_2 = run_multiple(ar) #recurse into multiple AR method for same data structure
-            end             
-            eval("o.#{na}=initial_data_2")
-            get_reflected_attributes(us, o)
-          end
-        end
-      end
-      
-      #commented out following lines in 1.3.4 - this makes single active records "as_single" permanent no matter what
-      #if us.single?
-      initial_data = o
-      #else
-      #  initial_data << o
-      #end
-      c += 1
+      next_payload = self.walk(association_value)
+      eval("payload.#{model}=next_payload")
     end
-    initial_data
+    payload
+  end
+  
+  #write array of active records with no reflections
+  def write_multiple_no_reflections(ar,payload)
+    ar.each_with_index do |record,i|
+      #write attributes on this object
+      attributes_holder = safe_open_struct
+      payload[i] = write_attributes(ar[i],attributes_holder)
+    end
+    payload
+  end
+  
+  def write_multiple(ar, payload, associations)
+    ar.each_with_index do |record,i|
+      #write attributes on this object
+      attributes_holder = safe_open_struct
+      payload[i] = write_attributes(ar[i],attributes_holder)
+      associations.each do |association|
+        #association is an ActiveRecord::Reflection::MacroReflection class
+        model = association.name.to_s
+        association_value = ar[i].send(:"#{model}")
+        if is_empty?(association_value)
+          next
+        end
+        next_payload = self.walk(association_value)
+        eval("payload[i].#{model}=next_payload")
+      end
+    end
+    payload
   end
 end
-
-
-=begin
-TESTING = true
-require 'rubygems'
-require 'active_record'
-require '../../services/org/universalremoting/browser/support/ar_models/user'
-require '../../services/org/universalremoting/browser/support/ar_models/address'
-require '../util/active_record'
-
-ar = ActiveRecordAdapter.new
-
-ActiveRecord::Base.establish_connection(:adapter => 'mysql', :host => 'localhost', :password => '', :username => 'root', :database => 'ar_rubyamf_testings')
-
-### multiple results, including some other associations
-mult = User.find(:all, :include => :addresses)
-
-### single result
-sing = User.find(402, :include => :addresses)
-
-final = ar.run_multiple(mult)
-puts "MULTIPLE -> RESULTS"
-puts '--------------'
-puts final.inspect
-puts '--------------'
-puts final[0].inspect
-
-puts "\n\n"
-
-finals = ar.run_single(sing)
-puts "SINGLE -> RESULT"
-puts '--------------'
-puts finals.inspect
-puts '--------------'
-puts finals[0].inspect
-=end

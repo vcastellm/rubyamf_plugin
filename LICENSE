@@ -7,6 +7,9 @@ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
+There is one exception to the above MIT license. WebORB may not use this code 
+base in any of their releases of WebORB for RoR.
+
 The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
 

@@ -1,4 +1,5 @@
 --changes 1.3.4
+#no more RubyAMF Lite. The last version of RubyAMF Lite can be found in svn at /branches/rubyamflite_9**.
 #single mysql records are ALWAYS returned as an object, not wrapped in an array anymore.
 #single active records are ALWAYS returned as an object. No use for as_single! anymore. Note there is a deprecation warning if you use it.
 #fixed small bug with incoming VO names. EI this wouldn't work: ValueObjects.regier({:incoming=>'vo.SectionVO',:map_to=>'Section',:outgoing=>'vo.SectionVO'}). Note that the package always get's truncated in situation like this. So this would be in the params hash as params[:sectionvo].
@@ -8,10 +9,13 @@
 #fixed issue with returned value objects that had :belongs_to association, it now correctly returns an object, not wrapped in any array anymore.
 #changed read_write so it doesn't crash in production when setCredentials is set. When in production mode the exception message was different in different modes.
 #fixed debug player issues. It correlates to the rails modes. An error that was happening while reading integers was raising errors, but the message was different per mode, so a regex I was using to sniff it was not catching it in production mode.
-#added initial :through support
+#added :through support, note that in order to get your data back to Flex, you must use eager loading (:include)
 #added magic_field ignorance. Incoming VO's magic field members are ignored. Currently magic fields are "created_at","created_on","updated_at","updated_on"
 #Rails no longer complains about missing views for RubyAMF requests.
-#added ParamMapping for mapping incoming remoting parameters into rails' params hash
+#added ParamMapping for mapping incoming remoting parameters into rails' params hash.
+#Rewrote active record adapter. Everything is done with the usual recursion, but also with reflections. Allows a 1:1 VO to AR.
+#Squeezed every possible millisecond out of the active record adapter. It's slightly faster, were talking 10's - 100's of milleseconds. The speed increase varies depending on the complexity of your result.
+#took out recordset_format header. not needed anymore.
 
 --changes 1.3.3b
 #updated rails parameter mapping for sending generic objects from flash/flex

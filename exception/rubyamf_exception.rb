@@ -52,6 +52,9 @@ class RUBYAMFException < Exception
   #vo errors
   @VO_ERROR = 'VO_ERROR'
   
+  #when a parameter mapping error occurs
+  @PARAMETER_MAPPING_ERROR = "PARAMETER_MAPPING_ERROR"
+  
   attr_accessor :message
 	attr_accessor :etype
 	attr_accessor :ebacktrace
@@ -77,6 +80,7 @@ class RUBYAMFException < Exception
 	  attr_accessor :ACTIVE_RECORD_ERRORS
 	  attr_accessor :VO_ERROR
 	  attr_accessor :AMF_ERROR
+	  attr_accessor :PARAMETER_MAPPING_ERROR
 	end
   
 	def initialize(type,msg)

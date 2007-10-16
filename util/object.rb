@@ -2,8 +2,12 @@ class Object
   attr_accessor :_explicitType
   attr_accessor :rmembers
   attr_accessor :id
+  attr_accessor :type
     
   def get_members
+    if self.inspect.to_s.match(/^:[a-zA-Z]/)
+      return []
+    end
     if self.rmembers != nil
       if self.id != nil
         self.rmembers << 'id'
@@ -11,7 +15,7 @@ class Object
       return self.rmembers
     end
     
-    members = obj.instance_variables.map{|mem| mem[1,mem.length]}
+    members = self.instance_variables.map{|mem| mem[1,mem.length]}
     if self.id != nil
       members << 'id'
     end

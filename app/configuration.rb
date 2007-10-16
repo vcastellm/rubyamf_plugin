@@ -85,6 +85,7 @@ class ValueObjects
   @@vo_by_instances_lookup = {}
   @@mapping_type = ''
   @@translate_case = false
+  @@vo_path = ''
 
   #register a value object map
   def ValueObjects.register(hash)
@@ -140,6 +141,64 @@ class ValueObjects
   
   def ValueObjects.translate_case=(v)
     @@translate_case = v
+  end
+  
+  #the rails parameter mapping type
+  def ValueObjects.vo_path=(val)
+    @@vo_path = val
+  end
+  
+  #the rails parameter mapping type
+  def ValueObjects.vo_path
+    @@vo_path
+  end
+end
+
+class Parameter
+  module Map
+    @@maps = []
+    
+    def self.register(mapping)
+      @@maps << mapping
+    end
+    
+    def self.get_maps
+      @@maps
+    end
+    
+    def self.eval_string(str)
+      str = str.gsub!("{","[")
+      str = str.gsub!("}","]")
+      return str
+    end
+    
+    def self.update_request_parameters(target_uri,railsparams,remotingparams)
+      begin
+        maps = []
+        @@maps.each do |map|
+          if ("#{map[:controller].to_s}.#{map[:action]}") == target_uri || (map[:controller].to_s == target_uri)
+            maps << map
+          end
+        end
+        if maps.empty? then return nil end
+        maps.each do |var|
+          var[:params].each do |k,v|
+            accessor = self.eval_string(v.clone)
+            val = eval("remotingparams#{accessor}")
+            railsparams[k.to_sym] = val
+            if val.is_a?(ActiveRecord::Base) && val.id != nil && val.id != 'NaN' && val.id != NaN && val.id != 'undefined'
+              #first put the update parameters in to the hash, then add the right id
+              railsparams[k.to_sym] = val.original_vo_from_deserialization.to_hash
+              railsparams[k.to_sym][:id] = val.id
+            elsif val.is_a?(ActiveRecord::Base) && (val.id == nil || val.id = 'NaN' || val.id == 'undefined')
+              railsparams[k.to_sym] = val.original_vo_from_deserialization.to_hash
+            end
+          end
+        end
+      rescue Exception => e
+        raise
+      end
+    end
   end
 end
 end

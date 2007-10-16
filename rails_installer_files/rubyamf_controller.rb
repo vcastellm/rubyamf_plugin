@@ -60,8 +60,12 @@ class RubyamfController < ActionController::Base
 			
   	  #if not flash user agent, send some html content
   		if request.env['CONTENT_TYPE'].to_s.match(/x-amf/) == nil
-  		  amf_response = "Your RubyAMF Flash Remoting gateway is alive and well. See 
-  		  <a href='http://wiki.rubyamf.org'>wiki.rubyamf.org</a> for more information."
+  		  amf_response = "<html><head><title>RubyAMF Gateway</title>
+  		  <style>body{margin:0;padding:0;font:12px sans-serif;color:#c8c8c8}td{font:12px sans-serif}</style>
+  		  </head><body bgcolor='#222222'>
+  		  <table width='100%' align=center valign=middle height='100%'>
+  		  <tr><td width=100 align=center>
+  		  <a href='http://blog.rubyamf.org'><img border=0 src='http://blog.rubyamf.org/images/gateway.png' /></a>"
   		else
   		  #send the raw data throught the rubyamf gateway and create the response
 		    amf_response = gateway.service(request.env["RAW_POST_DATA"])
