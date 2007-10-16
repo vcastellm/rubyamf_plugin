@@ -28,7 +28,7 @@ class VoUtil
             break
           else
             filepath = map[:map_to].split('.').join('/').to_s + '.rb' #set up filepath from the map_to symbol
-            load(RUBYAMF_VO + '/' + filepath) #require the file
+            load(ValueObjects.vo_path + '/' + filepath) #require the file
             vo = Object.const_get(classname.split('.').last).new #this returns an instance of the VO
             break
           end
@@ -48,12 +48,13 @@ class VoUtil
       #assign values to new VO object
       members = os.get_members
       members.each do |member|
-        eval("vo.#{member} = os.#{member}")
+        prop = ValueObjects.translate_case ? member.snake_case : member
+        eval("vo.#{prop} = os.#{member}")
       end
       
       #Assing RubyAMF tracking vars
       vo._explicitType = vomap[:map_to] #assign the VO it's 'mapped_to' classname
-      vo.rmembers = members
+      #vo.rmembers = members
       vo
     rescue LoadError => le
       raise RUBYAMFException.new(RUBYAMFException.VO_ERROR, "Tho VO definition #{classname} could not be found. #{le.message}")

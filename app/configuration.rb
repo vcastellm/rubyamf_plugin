@@ -85,6 +85,7 @@ class ValueObjects
   @@vo_by_instances_lookup = {}
   @@mapping_type = ''
   @@translate_case = false
+  @@vo_path = ''
 
   #register a value object map
   def ValueObjects.register(hash)
@@ -140,6 +141,16 @@ class ValueObjects
   
   def ValueObjects.translate_case=(v)
     @@translate_case = v
+  end
+  
+  #the rails parameter mapping type
+  def ValueObjects.vo_path=(val)
+    @@vo_path = val
+  end
+  
+  #the rails parameter mapping type
+  def ValueObjects.vo_path
+    @@vo_path
   end
 end
 

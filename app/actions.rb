@@ -370,7 +370,7 @@ class RailsInvokeAction
       
       begin
         #One last update of the parameters hash, this will map custom mappings to the hash, and will override any conflicting from above
-        Parameter::Map.update_request_parameters(@amfbody.target_uri,@amfbody.service_method_name,req.parameters,@amfbody.value)
+        Parameter::Map.update_request_parameters(@amfbody.target_uri,req.parameters,@amfbody.value)
       rescue Exception => e
         raise RUBYAMFException.new(RUBYAMFException.PARAMETER_MAPPING_ERROR, "There was an error with your parameter mappings: {#{e.message}}")
       end
