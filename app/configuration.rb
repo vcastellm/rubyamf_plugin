@@ -165,7 +165,7 @@ class Parameter
       begin
         maps = []
         @@maps.each do |map|
-          if ("#{map[:controller].to_s}.#{map[:action]}") == target_uri
+          if ("#{map[:controller].to_s}.#{map[:action]}") == target_uri || (map[:controller].to_s == target_uri)
             maps << map
           end
         end
