@@ -18,7 +18,8 @@ class ActiveRecordAdapter
     columns = ar.attributes.map{|k,v| k}
     columns.each_with_index do |column,i|
       val = ar.send(:"#{column}")
-      eval("ob.#{column}=val")
+      prop = ValueObjects.translate_case ? column.camlize(:lower) : column
+      eval("ob.#{prop}=val")
     end
     #turn the outgoing object into a VO if neccessary
     map = VoUtil.get_vo_definition_from_active_record(ar.class.to_s)
