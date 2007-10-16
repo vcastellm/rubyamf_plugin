@@ -704,7 +704,8 @@ class AMFSerializer
   		  if key == nil || key == '' || key == 'method' || key == "_explicitType" || key == "rmembers"
   		    next
   		  end
-  			write_utf(key)
+  		  prop = ValueObjects.translate_case ? key.camlize(:lower) : key
+  			write_utf(prop)
   			write(eval("object.#{key}"))
   		rescue Exception => e
   		end
