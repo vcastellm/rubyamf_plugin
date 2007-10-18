@@ -8,11 +8,9 @@ require 'ostruct'
 require 'util/object'
 require 'util/openstruct'
 require 'util/string'
-require 'util/log'
 require 'util/net_debug'
 require 'util/active_record'
 require 'util/bigdecimal'
-require 'logger'
 require 'zlib'
 include RUBYAMF::Actions
 include RUBYAMF::App
@@ -35,7 +33,6 @@ class Gateway
 		RequestStore.actions_path = File.dirname(__FILE__) + '/actions/'
 		RequestStore.filters_path = File.dirname(__FILE__) + '/filter/'
 		RequestStore.adapters_path = File.dirname(__FILE__) + '/../adapters/'
-		RequestStore.logs_path = File.dirname(__FILE__) + '/../logs/'
 		RequestStore.actions = Array[PrepareAction.new, ClassAction.new, ApplictionInstanceInitAction.new, InvokeAction.new, ResultAdapterAction.new] #create the actions  
 		RequestStore.filters = Array[AMFDeserializerFilter.new, RecordsetFormatFilter.new, AuthenticationFilter.new, BatchFilter.new, nd, AMFSerializeFilter.new] #create the filter
 	end
