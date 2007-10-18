@@ -106,7 +106,7 @@ class ActiveRecordAdapter
     associations.each do |association|
       #association is an ActiveRecord::Reflection::MacroReflection class
       model = association.name.to_s
-      association_value = ar.send(:"#{model}")
+      association_value = ar.send(model)
       if is_empty?(association_value)
         next
       end
@@ -134,7 +134,7 @@ class ActiveRecordAdapter
       associations.each do |association|
         #association is an ActiveRecord::Reflection::MacroReflection class
         model = association.name.to_s
-        association_value = ar[i].send(:"#{model}")
+        association_value = ar[i].send(model)
         if is_empty?(association_value)
           next
         end
