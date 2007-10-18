@@ -17,6 +17,7 @@
 #Squeezed every possible millisecond out of the active record adapter. It's slightly faster, were talking 10's - 100's of milleseconds. The speed increase varies depending on the complexity of your result.
 #Fixed problem with VO's that aren't active records.
 #Added ValueObjects.vo_path to vo_config. See the documentation in that config file about what it is.
+#Changed how render AMF decorates ActionController::Base. This new way is right for rails. It has suppressed any errors with rendering / layouts
 
 --changes 1.3.3b
 #updated rails parameter mapping for sending generic objects from flash/flex
