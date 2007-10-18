@@ -313,7 +313,6 @@ class RailsInvokeAction
 		req.parameters['action'] = sm
 		req.request_parameters['controller'] = ct
 		req.request_parameters['action'] = sm
-		req.request_parameters['amf'] = 'hello world'
 		req.path_parameters['controller'] = ct
 		req.path_parameters['action'] = ct
 		req.env['PATH_INFO'] = "#{ct}/#{sm}"
