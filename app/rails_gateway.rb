@@ -9,9 +9,7 @@ require 'app/amf'
 require 'exception/exception_handler'
 require 'app/actions'
 require 'app/filters'
-require 'util/log'
 require 'util/net_debug'
-require 'logger'
 require 'zlib'
 include RUBYAMF::Actions
 include RUBYAMF::App

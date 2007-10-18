@@ -174,6 +174,7 @@ class InvokeAction
 	  if amfbody.exec == false
 	    if amfbody.special_handling == 'Ping'
         amfbody.results = generate_acknowledge_object(amfbody.get_meta('messageId'), amfbody.get_meta('clientId')) #generate an empty acknowledge message here, no body needed for a ping
+        #amfbody.resultsXML = generate_acknowledge_object(amfbody.get_meta('messageId'), amfbody.get_meta('clientId')) #generate an empty acknowledge message here, no body needed for a ping
         amfbody.success! #flag the success response
       end
       return
@@ -197,7 +198,7 @@ class InvokeAction
 	  if RequestStore.auth_header != nil
 	    if @service.public_methods.include?('_authenticate')
 	      begin
-  	      res = @service.send('_authenticate', *[RequestStore.auth_header.value.username, RequestStore.auth_header.value.password])
+  	      res = @service.send('_authenticate', *[RequestStore.auth_header.value.userid, RequestStore.auth_header.value.password])
           if res == false #catch false
       		  raise RUBYAMFException.new(RUBYAMFException.AUTHENTICATION_ERROR, "Authentication Failed");
           elsif res.class.to_s == 'FaultObject' #catch returned FaultObjects
@@ -258,7 +259,8 @@ class InvokeAction
 		end
 			  
 		@amfbody.results = @service_result #set the result in this body object
-		
+		#@amfbody.resultsXML = @service_result #set the result in this body object
+				
 		#amf3
     if @amfbody.special_handling == 'RemotingMessage'
       @wrapper = generate_acknowledge_object(@amfbody.get_meta('messageId'), @amfbody.get_meta('clientId'))
@@ -277,7 +279,9 @@ class RailsInvokeAction
 	  if amfbody.exec == false
 	    if amfbody.special_handling == 'Ping'
         amfbody.results = generate_acknowledge_object(amfbody.get_meta('messageId'), amfbody.get_meta('clientId')) #generate an empty acknowledge message here, no body needed for a ping
-        amfbody.success! #flag the success response
+        #amfbody.resultsXML = generate_acknowledge_object(amfbody.get_meta('messageId'), amfbody.get_meta('clientId')) #generate an empty acknowledge message here, no body needed for a ping
+        
+	amfbody.success! #flag the success response
       end
       return
 	  end
@@ -313,6 +317,7 @@ class RailsInvokeAction
 		req.parameters['action'] = sm
 		req.request_parameters['controller'] = ct
 		req.request_parameters['action'] = sm
+		req.request_parameters['amf'] = 'hello world'
 		req.path_parameters['controller'] = ct
 		req.path_parameters['action'] = ct
 		req.env['PATH_INFO'] = "#{ct}/#{sm}"
@@ -328,7 +333,7 @@ class RailsInvokeAction
 		if @amfbody.value.empty? || @amfbody.value.nil?
 		  @service.process(req,res)
 		else
-		  @amfbody.value.each_with_index do |item,i|
+		  @amfbody.value.each_with_index do |item,i|		    
 		    req.parameters[i] = item
 		    if item.class.superclass.to_s == 'ActiveRecord::Base'
 		      req.parameters[i] = item.original_vo_from_deserialization.to_hash
@@ -363,15 +368,8 @@ class RailsInvokeAction
   		        req.parameters[:id] = item.id
   		      end
   		      req.parameters.merge!(item.to_hash)
-  		    end
+  		    end  		    
 		    end
-      end
-      
-      begin
-        #One last update of the parameters hash, this will map custom mappings to the hash, and will override any conflicting from above
-        Parameter::Map.update_request_parameters(@amfbody.target_uri,req.parameters,@amfbody.value)
-      rescue Exception => e
-        raise RUBYAMFException.new(RUBYAMFException.PARAMETER_MAPPING_ERROR, "There was an error with your parameter mappings: {#{e.message}}")
       end
 	    @service.process(req,res)
     end
@@ -380,18 +378,17 @@ class RailsInvokeAction
     @service.is_amf = false
 		@service.is_rubyamf = false
     
-    result = RequestStore.render_amf_results
-    
 		#handle FaultObjects
-		if result.class.to_s == 'FaultObject' #catch returned FaultObjects
-      raise RUBYAMFException.new(result.code, result.message)
+		if @service.amf_content.class.to_s == 'FaultObject' #catch returned FaultObjects
+      raise RUBYAMFException.new(@service.amf_content.code, @service.amf_content.message)
 		end
 		
 		#amf3
-		@amfbody.results = result
+		@amfbody.results = @service.amf_content
+		#@amfbody.resultsXML = @service.amf_content
     if @amfbody.special_handling == 'RemotingMessage'
       @wrapper = generate_acknowledge_object(@amfbody.get_meta('messageId'), @amfbody.get_meta('clientId'))
-      @wrapper.body = result
+      @wrapper.body = @service.amf_content
       @amfbody.results = @wrapper
 		end
 	  @amfbody.success! #set the success response uri flag (/onResult)
@@ -409,6 +406,7 @@ class ResultAdapterAction
 	  end
 	  
     new_results = '' #for some reason this has to be initialized here.. not sure why
+    resultsXML = ''
 		if amfbody.special_handling == 'RemotingMessage'
 		  results = amfbody.results.body
 		else
@@ -417,7 +415,10 @@ class ResultAdapterAction
     
     begin
       if adapter = Adapters.get_adapter_for_result(results)
-        new_results = adapter.run(results)
+        #new_results = adapter.run(results)
+        adapter.run(results)
+        new_results = adapter.get_results
+	resultsXML = adapter.get_XML
       else
         return
       end
@@ -433,6 +434,7 @@ class ResultAdapterAction
 		  amfbody.results.body = new_results
 	  else
 	    amfbody.results = new_results
+            amfbody.rexultsXML = resultsXML
 	  end
 	end
 end

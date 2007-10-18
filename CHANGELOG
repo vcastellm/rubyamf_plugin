@@ -1,5 +1,5 @@
 --changes 1.3.4
-#no more RubyAMF Lite. The last version of RubyAMF Lite can be found in svn at /branches/rubyamflite_9**.
+#Killed RubyAMF Lite. The last version of RubyAMF Lite can be found in svn at /branches/rubyamflite_9**.
 #single mysql records are ALWAYS returned as an object, not wrapped in an array anymore.
 #single active records are ALWAYS returned as an object. No use for as_single! anymore. Note there is a deprecation warning if you use it.
 #fixed small bug with incoming VO names. EI this wouldn't work: ValueObjects.regier({:incoming=>'vo.SectionVO',:map_to=>'Section',:outgoing=>'vo.SectionVO'}). Note that the package always get's truncated in situation like this. So this would be in the params hash as params[:sectionvo].
@@ -15,7 +15,9 @@
 #added ParamMapping for mapping incoming remoting parameters into rails' params hash.
 #Rewrote active record adapter. Everything is done with the usual recursion, but also with reflections. Allows a 1:1 VO to AR.
 #Squeezed every possible millisecond out of the active record adapter. It's slightly faster, were talking 10's - 100's of milleseconds. The speed increase varies depending on the complexity of your result.
-#took out recordset_format header. not needed anymore.
+#Fixed problem with VO's that aren't active records.
+#Added ValueObjects.vo_path to vo_config. See the documentation in that config file about what it is.
+#Changed how render AMF decorates ActionController::Base. This new way is right for rails. It has suppressed any errors with rendering / layouts
 
 --changes 1.3.3b
 #updated rails parameter mapping for sending generic objects from flash/flex
@@ -49,6 +51,7 @@
 #changed recordset_format default to be FL9
 #Handled bug with Date/Time/DateTime not writing as correct reference to other Date's in the AMF stream, (if the same date was being returned, it would write a reference, but writing references to dates does not work correctly in the player)
 #fixed final friggin 'id' property problems. All id attributes come through correctly now, (both ways).
+
 
 --changes 1.3.1
 #added Adapters.deep_adaptations See an adapters_config file for more information.

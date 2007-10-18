@@ -8,11 +8,9 @@ require 'ostruct'
 require 'util/object'
 require 'util/openstruct'
 require 'util/string'
-require 'util/log'
 require 'util/net_debug'
 require 'util/active_record'
 require 'util/bigdecimal'
-require 'logger'
 require 'zlib'
 include RUBYAMF::Actions
 include RUBYAMF::App
@@ -30,13 +28,11 @@ class Gateway
 	
 	#creates a new gateway instance
 	def initialize
-	  @log = Log.instance
 	  nd = NetDebug.new #new instance is made here so that if NetDebug isn't in the filter chain, it doesn't cause errors when trying to use it in a service method
 		RequestStore.gateway_path = File.dirname(__FILE__) + './'
 		RequestStore.actions_path = File.dirname(__FILE__) + '/actions/'
 		RequestStore.filters_path = File.dirname(__FILE__) + '/filter/'
 		RequestStore.adapters_path = File.dirname(__FILE__) + '/../adapters/'
-		RequestStore.logs_path = File.dirname(__FILE__) + '/../logs/'
 		RequestStore.actions = Array[PrepareAction.new, ClassAction.new, ApplictionInstanceInitAction.new, InvokeAction.new, ResultAdapterAction.new] #create the actions  
 		RequestStore.filters = Array[AMFDeserializerFilter.new, RecordsetFormatFilter.new, AuthenticationFilter.new, BatchFilter.new, nd, AMFSerializeFilter.new] #create the filter
 	end
@@ -84,26 +80,6 @@ class Gateway
 	
 	def gzip_outgoing=(val)
 	  RequestStore.gzip = val
-	end
-	
-	#set a log file, all development logging will go to this file, must be relative to THIS gateway file
-	def set_log_file(filename)
-	  @logfile = RequestStore.LOGS_PATH + filename
-	end
-	
-	#set the logger level
-	def log_level=(level)
-	  if level == 'debug'
-			@log.level = Logger::DEBUG
-		elsif level == 'info'
-			@log.level = Logger::INFO
-		elsif level == 'warn'
-			@log.level = Logger::WARN
-		elsif level == 'error'
-			@log.level = Logger::ERROR
-		elsif level == 'fatal'
-			@log.level = Logger::FATAL
-		end
 	end
 
 private
