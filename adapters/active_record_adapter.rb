@@ -16,7 +16,7 @@ class ActiveRecordAdapter
   #utility method for writing attributes on an active record
   def write_attributes(ar,ob)
     columns = ar.attributes.map{|k,v| k}
-    columns.each_with_index do |column,i|
+    columns.each do |column|
       val = ar.send(:"#{column}")
       prop = ValueObjects.translate_case ? column.camlize(:lower) : column
       eval("ob.#{prop}=val")
