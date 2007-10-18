@@ -33,6 +33,7 @@ class RequestStore
   @app_instance
   @rails_request
   @rails_response
+  @render_amf_results = false
 
 	class << self
 	  attr_accessor :actions
@@ -64,6 +65,7 @@ class RequestStore
 	  attr_accessor :reload_services
 	  attr_accessor :rails_request
 	  attr_accessor :rails_response
+	  attr_accessor :render_amf_results
 	end
 
 end

@@ -92,19 +92,19 @@ class ActiveRecord::Base
       associations.each do |ass|
         n = ass.name.to_s
         if ass.macro == :belongs_to
-          if hash[n].nil? || hash[n].to_s == 'NaN' || hash[n].to_s == 'undefined'
+          if hash[n].nil? || hash[n].to_s == 'NaN' || hash[n].to_s == 'undefined' || hash[n] == NaN
             os.delete_field(n.to_sym)
             hash.delete(n.to_s)
           end
         
         elsif ass.macro == :has_many || :has_and_belongs_to_many
-          if hash[n].nil? || hash[n].to_s == 'NaN' || hash[n].to_s == 'undefined'
+          if hash[n].nil? || hash[n].to_s == 'NaN' || hash[n].to_s == 'undefined' || hash[n] == NaN
             os.delete_field(n.to_sym)
             hash.delete(n.to_s)
           end
           
         elsif ass.macro == :through
-          if hash[n].nil? || hash[n].to_s == 'NaN' || hash[n].to_s == 'undefined'
+          if hash[n].nil? || hash[n].to_s == 'NaN' || hash[n].to_s == 'undefined' || hash == NaN
             os.delete_field(n.to_sym)
             hash.delete(n.to_s)
           end

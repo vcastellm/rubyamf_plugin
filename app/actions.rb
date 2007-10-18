@@ -381,16 +381,18 @@ class RailsInvokeAction
     @service.is_amf = false
 		@service.is_rubyamf = false
     
+    result = RequestStore.render_amf_results
+    
 		#handle FaultObjects
-		if @service.amf_content.class.to_s == 'FaultObject' #catch returned FaultObjects
-      raise RUBYAMFException.new(@service.amf_content.code, @service.amf_content.message)
+		if result.class.to_s == 'FaultObject' #catch returned FaultObjects
+      raise RUBYAMFException.new(result.code, result.message)
 		end
 		
 		#amf3
-		@amfbody.results = @service.amf_content
+		@amfbody.results = result
     if @amfbody.special_handling == 'RemotingMessage'
       @wrapper = generate_acknowledge_object(@amfbody.get_meta('messageId'), @amfbody.get_meta('clientId'))
-      @wrapper.body = @service.amf_content
+      @wrapper.body = result
       @amfbody.results = @wrapper
 		end
 	  @amfbody.success! #set the success response uri flag (/onResult)
