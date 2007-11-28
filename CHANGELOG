@@ -1,3 +1,18 @@
+--changes 1.5
+#re-factored 80% of the codebase
+#Added ClassMappings.ignore_fields for globally ignoring incoming properties on objects
+#Added ClassMappings.translate_case
+#Added ClassMappings.force_active_record_ids for forcing id's to be included in incoming hash's, even if you don't put it in the :attributes of a class mapping.
+#Added ClassMappings.assume_types. For assuming typed object transfers. This enables typed transfers without defining ClassMappings
+#Added ClassMappings.use_ruby_date_time.
+#Added ClassMappings.use_array_collection
+#Added ClassMappings.check_for_associations
+#Added ParameterMappings.always_add_to_params
+#Added ParameterMappings.scaffolding
+#Added :attributes,:associations,:ignore_fields,:scope into ClassMappings.register options
+#Fixed referencing bug with deserializer
+#renamed ValueOBjects to ClassMappings
+
 --changes 1.3.4
 #Killed RubyAMF Lite. The last version of RubyAMF Lite can be found in svn at /branches/rubyamflite_9**.
 #single mysql records are ALWAYS returned as an object, not wrapped in an array anymore.

@@ -1,9 +1,3 @@
-see http://wiki.rubyamf.org/wiki/show/HomePage for more information
 (c) aaron smith, aaron@rubyamf.org
-
-doc gen:
-$>rdoc -o ./rubyamf_core/docs -t "RubyAMF Documentation" --template jamis -x ./rubyamf_core/ext/ -x ./rubyamf_core/profiling/ -x ./rubyamf_core/tests/ -x ./services/  --line-numbers --inline-source
-
-jamis template:
-http://www.jamisbuck.org/svn/rdoc-templates/jamis.rb
-
+http://www.rubyamf.org
+http://code.google.com/p/rubyamf

@@ -1,10 +1,12 @@
 #decorate ActionController::Base for render :amf
+require 'app/request_store'
 ActionController::Base.class_eval do
   def render_with_amf(options = nil, &block)
     begin
-      if options != nil && options.keys.include?(:amf)
+      if options && options.is_a?(Hash) && options.keys.include?(:amf)
         #store results on RequestStore, can't prematurely return or send_data.
-        RequestStore.render_amf_results = options[:amf]
+        RubyAMF::App::RequestStore.render_amf_results = options[:amf]
+        RubyAMF::Configuration::ClassMappings.current_mapping_scope = options[:class_mapping_scope]||RubyAMF::Configuration::ClassMappings.default_mapping_scope
       else
         render_without_amf(options,&block)
       end
@@ -21,36 +23,19 @@ class ActionController::Base
   
   attr_accessor :is_amf
   attr_accessor :is_rubyamf #-> for simeon :)-
-  attr_accessor :used_render_amf
-  attr_accessor :amf_content
-  attr_accessor :rubyamf_attempt_file_render
+  attr_accessor :rubyamf_params # this way they can always access the rubyamf_params
   
   #Higher level "credentials" method that returns credentials wether or not 
-  #it was from setRemoteCredentials, or setCredentials
+  #it was from setRemoteCredentials, or setCredentials  
   def credentials
     empty_auth = {:username => nil, :password => nil}
-    a = amf_credentials
-    h = html_credentials
-    if !a.nil?
-      return a
-    elsif !h.nil?
-      return h
-    end
-    empty_auth #return an empty auth, this watches out for being the cause of an exception, (nil[])
+    amf_credentials||html_credentials||empty_auth #return an empty auth, this watches out for being the cause of an exception, (nil[])
   end
   
 private
   #setCredentials access
   def amf_credentials
-    auth = RequestStore.rails_authentication
-    if(!auth)
-      return nil
-    else
-      if !auth[:username] && !auth[:password]
-        return nil
-      end
-    end
-    return auth
+    RubyAMF::App::RequestStore.rails_authentication
   end
   
   #remoteObject setRemoteCredentials retrieval

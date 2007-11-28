@@ -1,47 +1,33 @@
-require 'app/gateway'
-require 'ostruct'
-require 'util/object'
-require 'util/openstruct'
-require 'util/active_record'
-require 'util/action_controller'
+# require 'app/gateway'
 require 'app/request_store'
 require 'app/amf'
-require 'exception/exception_handler'
 require 'app/actions'
 require 'app/filters'
-require 'util/net_debug'
+require 'app/configuration'
 require 'zlib'
-include RUBYAMF::Actions
-include RUBYAMF::App
-include RUBYAMF::AMF
-include RUBYAMF::Filter
-include RUBYAMF::Exceptions
-include RUBYAMF::Util
+module RubyAMF
+  module App
+    #Rails Gateway, extends regular gateway and changes the actions
+    class RailsGateway
 
-module RUBYAMF
-module App
-
-#Rails Gateway, extends regular gateway and changes the actions
-class RailsGateway < Gateway
+      include RubyAMF::Actions
+      include RubyAMF::AMF
+      include RubyAMF::Configuration
+      include RubyAMF::Filter
+      include RubyAMF::App # for RequestStore
+      include RubyAMF::Exceptions
   
-	def initialize
-    super
-		RequestStore.actions = Array[PrepareAction.new, ClassAction.new, RailsInvokeAction.new, ResultAdapterAction.new] #override the actions 
-		RequestStore.rails = true
-	end
-		
-private
-	#This just requires the config file so that that configuration code runs
-	def app_config
-	  begin
-	    require RequestStore.config_path + 'vo_config'
-	    require RequestStore.config_path + 'adapters_config'
-	  rescue Exception => e
-	    STDOUT.puts "You have an error in your rubyamf_config file, please correct it."
-	    STDOUT.puts e.message
-	    STDOUT.puts e.backtrace
-	  end
+      def initialize
+        RequestStore.filters = Array[AMFDeserializerFilter.new, AuthenticationFilter.new, BatchFilter.new, AMFSerializeFilter.new] #create the filter
+        RequestStore.actions = Array[PrepareAction.new, RailsInvokeAction.new] #override the actions
+      end
+
+      #all get and post requests circulate throught his method
+      def service(raw)
+        amfobj = AMFObject.new(raw)
+        FilterChain.new.run(amfobj)
+        RequestStore.gzip ? Zlib::Deflate.deflate(amfobj.output_stream) : amfobj.output_stream
+      end
+    end
   end
-end
-end
 end
