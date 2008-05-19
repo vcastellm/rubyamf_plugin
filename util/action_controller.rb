@@ -1,5 +1,5 @@
-#decorate ActionController::Base for render :amf
 require 'app/request_store'
+require 'app/configuration'
 ActionController::Base.class_eval do
   def render_with_amf(options = nil, &block)
     begin
@@ -20,13 +20,12 @@ end
 
 #This class extends ActionController::Base
 class ActionController::Base
-  
   attr_accessor :is_amf
   attr_accessor :is_rubyamf #-> for simeon :)-
   attr_accessor :rubyamf_params # this way they can always access the rubyamf_params
   
-  #Higher level "credentials" method that returns credentials wether or not 
-  #it was from setRemoteCredentials, or setCredentials  
+  #Higher level "credentials" method that returns credentials wether or not
+  #it was from setRemoteCredentials, or setCredentials
   def credentials
     empty_auth = {:username => nil, :password => nil}
     amf_credentials||html_credentials||empty_auth #return an empty auth, this watches out for being the cause of an exception, (nil[])
@@ -48,6 +47,13 @@ private
     else
       return nil
     end
-    return {:username => remote_auth[0], :password => remote_auth[1]}
+    case RubyAMF::Configuration::ClassMappings.hash_key_access
+    when :string:
+      return {'username' => remote_auth[0], 'password' => remote_auth[1]}
+    when :symbol:
+      return {:username => remote_auth[0], :password => remote_auth[1]}
+    when :indifferent:
+      return HashWithIndifferentAccess.new({:username => remote_auth[0], :password => remote_auth[1]})
+    end
   end  
 end

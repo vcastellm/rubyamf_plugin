@@ -15,11 +15,16 @@ class RubyamfController < ActionController::Base
         headers['Content-Type'] = "application/x-amf"
         RailsGateway.new.service(request.raw_post) #send the raw data throught the rubyamf gateway and create the response
       else 
+        headers['Content-Type'] = "text/html"
         welcome_screen_html # load in some stub html
       end
+
+    # this is a fugly patch, but I'm not sure what the real problem is. Content-Type is set for gateway requests
+    # and type is set for other requests.
+    headers['Content-Type'] ||= headers['type']
             
     #render the AMF
-    send_data(amf_response, :type => 'application/x-amf')
+    send_data(amf_response, {:type => headers['Content-Type'], :disposition => 'inline'})
   rescue Exception => e #only errors in this scope will ever be rescued here, see BatchFiler
     STDOUT.puts e.to_s
     STDOUT.puts e.backtrace

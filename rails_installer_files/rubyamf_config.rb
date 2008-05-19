@@ -23,7 +23,16 @@ module RubyAMF
     # includes the id field for activerecord objects even if you don't specify it when using custom attributes. This is important for deserialization
     # where ids are needed to keep active record association integrity.
     # ClassMappings.force_active_record_ids = true
-  
+    
+    # => Hash key access
+    # You can choose how keys in hashes are created. As :string, :symbol, or :indifferent. 
+    # :string creates keys as hash['key']
+    # :symbol creates keys as hash[:key]
+    # :indifferent uses rails HashWithIndifferentAccess so you can use hash[:key] of hash['key']
+    # There are performance issues with HashWithIndifferentAccess. Use :symbol or :string for best performance.
+    # The default is :symbol
+    # ClassMappings.hash_key_access = :symbol
+    
     # => Assume Class Types
     # This tells RubyAMF to assume class type transfers. So when you register a class Alias from Flash or Flex like this:
     # Flash::   fl.net.registerClassAlias('User',User)
@@ -38,9 +47,10 @@ module RubyAMF
     # :ruby           # The ruby class to turn it into
     #
     # => Optional value object properties:
-    # :type                 # Used to spectify the type of VO, valid options are 'active_record', 'custom',  (or don't specify at all)
-    # :associations     # Specify which associations to read on the active record (only applies to active records)
-    # :attributes        # Specifically which attributes to include in the serialization
+    # :type           # Used to spectify the type of VO, valid options are 'active_record', 'custom',  (or don't specify at all)
+    # :associations   # Specify which associations to read on the active record (only applies to active records)
+    # :attributes     # Specifically which attributes to include in the serialization
+    # :methods        # An array of methods to call and place values in a similarly named attribute on the Actionscript Object (outgoing, or Rails => Actionscript only)
     # :ignore_fields  # An array of field names you want to ignore on incoming classes
     #
     # If you are using ActiveRecord VO's you do not need to specify a fully qualified class path to the model, you can just define the class name, 
@@ -52,6 +62,7 @@ module RubyAMF
     # ClassMappings.register(:actionscript => 'Person', :ruby => 'Person', :type => 'active_record', :attributes => ["id", "address_id"])
     # ClassMappings.register(:actionscript => 'User', :ruby => 'User', :type => 'active_record', :associations=> ["addresses", "credit_cards"])
     # ClassMappings.register(:actionscript => 'Address', :ruby => 'Address', :type => 'active_record')
+    # ClassMappings.register(:actionscript => 'User', :ruby => 'User', :type => 'active_record', :associations=> ["addresses", "credit_cards"], :methods => ["friends"])
     #
     # => Class Mapping Scope (Advanced Usage)
     # You can also specify a class mapping scope if you want. For example, lets say you need certain attributes for a book when you are viewing a book

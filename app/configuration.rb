@@ -110,7 +110,7 @@ module RubyAMF
               if scaffolding
                 if (first = remoting_params[0])
                   if first.is_a?(ActiveRecord::Base)
-                    key = first.class.to_s.downcase.to_sym
+                    key = first.class.to_s.to_snake!.downcase.to_sym # a generated scaffold expects params in snake_case, rubyamf_params gets them for consistency in scaffolding
                     rubyamf_params[key] = first.attributes.dup
                     first.instance_variables.each do |assoc|
                       next if "@new_record" == assoc
@@ -120,16 +120,21 @@ module RubyAMF
                       request_params[key] = rubyamf_params[key] #put it into rubyamf_params
                     end
                   else
-                    if first.is_a?(VoHash)
-                      if (key = first.explicitType.split('::').last.downcase.to_sym)
+                    if first.is_a?(RubyAMF::VoHelper::VoHash)
+                      if (key = first.explicitType.split('::').last.to_snake!.downcase.to_sym)
                         rubyamf_params[key] = first
                         if always_add_to_params
                           request_params[key] = first
                         end
                       end
-                      request_params[:id] = rubyamf_params[:id] = first['id'] if first['id'] && !first['id']==0
+                    elsif first.is_a?(Hash) # a simple hash should become named params in params
+                      rubyamf_params.merge!(first)
+                      if always_add_to_params
+                        request_params.merge!(first)
+                      end
                     end
                   end
+                  request_params[:id] = rubyamf_params[:id] = first['id'] if (first['id'] && !(first['id']==0))
                 end
               end
             end

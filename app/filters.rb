@@ -23,11 +23,20 @@ module RubyAMF
 
     class AuthenticationFilter
       include RubyAMF::App
+      include RubyAMF::Configuration
       def run(amfobj)
         RequestStore.auth_header = nil # Aryk: why do we need to rescue this? 
         if (auth_header = amfobj.get_header_by_key('Credentials'))
           RequestStore.auth_header = auth_header #store the auth header for later
-          RequestStore.rails_authentication = {:username => auth_header.value['userid'], :password => auth_header.value['password']}
+          case ClassMappings.hash_key_access
+          when :string:
+            auth = {'username' => auth_header.value['userid'], 'password' => auth_header.value['password']}
+          when :symbol:
+            auth = {:username => auth_header.value['userid'], :password => auth_header.value['password']}
+          when :indifferent:
+            auth = HashWithIndifferentAccess.new({:username => auth_header.value['userid'], :password => auth_header.value['password']})
+          end
+          RequestStore.rails_authentication = auth
         end
       end
     end

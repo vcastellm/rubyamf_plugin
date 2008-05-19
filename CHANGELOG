@@ -1,3 +1,23 @@
+--changes 1.6
+Changes
+* documented hash_key_access for ClassMappings.
+* new install process - now updates routes.rb with the rubyamf controller route. Also puts the mime type registration in the config/initializers directory if there is one, to conform better to Rails 2 convention. One day rubyamf_config.rb may live there too.
+* added ability to specify method results from active records to be set on actionscript object properties, just like attributes.
+* added a generator, rubyamf_scaffold, to generate a RubyAMF scaffold - a model, fixtures, tests, and a RubyAMF specific controller
+* added a "generator", rubyamf_mappings, to assist creating class mappings. Writes mappings for all models to the command line; does not modify any files.
+
+Many Bug fixes, e.g.:
+* fixed annoying warning where rubyamf was sending attributesCache or attributes_cache as an attribute of all objects
+* fixed issue saving new active records with timestamps where timestamp variables are ignored
+* fixed a bug where rendering a FaultEvent would throw another exception since result has no clientId in that case
+* reimplemented object references in the serializer - incoming object graphs work now
+* fixed issue 48, module error when passing hash to controller with scaffolding on. Also added related scaffolding improvement.
+* fixed issue with Rails 2
+* fixed issue 36, error stopping migrations from working
+* fixed issues with authenticaiton credentials and the ClassMappings.hash_key_access. Athentication was always :symbols, where it should be taking hash_key_access into account and give you what you want..
+* fixed some small but big bugs in the serializer. in write_amf3. was testing (if !value). but that is wrong, as it should specifically be if value == nil. otherwise when false comes through the serializer, it will be null in flex
+
+
 --changes 1.5
 #re-factored 80% of the codebase
 #Added ClassMappings.ignore_fields for globally ignoring incoming properties on objects

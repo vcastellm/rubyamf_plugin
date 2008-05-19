@@ -14,7 +14,7 @@ class ExceptionHandler
       #trigger RemoteObject failure for AsyncTokens
       if body.special_handling == "RemotingMessage"
         body.results["correlationId"] = body.get_meta('messageId')
-        body.results["clientId"] = body.get_meta('clientId') || body.results.correlationId
+        body.results["clientId"] = body.get_meta('clientId') || body.results["correlationId"]
       end
     else
       body.fail! #force the fail trigger for F8, this causes it to map to the onFault handler

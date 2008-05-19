@@ -37,6 +37,14 @@ module RubyAMF
             attributes.delete("id") if attributes["id"]==0 # id attribute cannot be zero
             ruby_obj.instance_variable_set("@attributes", attributes) # bypasses any overwriting of the attributes=(value) method  (also allows 'id' to be set)
             ruby_obj.instance_variable_set("@new_record", false) if attributes["id"] # the record already exists in the database
+            #superstition
+            if (ruby_obj.new_record?)
+              ruby_obj.created_at = nil if ruby_obj.respond_to? "created_at"
+              ruby_obj.created_on = nil if ruby_obj.respond_to? "created_on"
+              ruby_obj.updated_at = nil if ruby_obj.respond_to? "updated_at"
+              ruby_obj.updated_on = nil if ruby_obj.respond_to? "updated_on"
+            end
+
             obj.each_key do |field|
               if reflection = ruby_obj.class.reflections[field.to_sym] # is it an association
                 value = obj.delete(field) # get rid of the field so it doesnt get added in the next loop
@@ -71,6 +79,7 @@ module RubyAMF
       def self.get_vo_hash_for_outgoing(obj)
         new_object = VoHash.new #use VoHash because one day, we might do away with the class Object patching
         instance_vars = obj.instance_variables
+        methods = []
         if map = ClassMappings.get_vo_mapping_for_ruby_class(obj.class.to_s)
           if map[:type]=="active_record"
             attributes_hash = obj.attributes
@@ -86,7 +95,14 @@ module RubyAMF
                 instance_vars << ("@"+assoc) if obj.send(assoc) # this will make sure they are instantiated and only load it if they have a value.
               end
             elsif ClassMappings.check_for_associations
-              instance_vars = obj.instance_variables.reject{|assoc| ["@attributes","@new_record","@read_only"].include?(assoc)}
+              instance_vars = obj.instance_variables.reject{|assoc| ["@attributes","@new_record","@read_only","@attributes_cache"].include?(assoc)}
+            end
+            
+            # if there are AR methods they want in the AS object as an attribute, see about them here.
+            if map[:methods]
+              map[:methods].each do |method|
+                methods << method if obj.respond_to?(method)
+              end
             end
           end
           new_object._explicitType = map[:actionscript] # Aryk: This only works on the Hash because rubyAMF extended class Object to have this accessor, probably not the best idea, but its already there.   
@@ -101,7 +117,7 @@ module RubyAMF
             end
             instance_vars = []
             if ClassMappings.check_for_associations
-              instance_vars = obj.instance_variables.reject{|assoc| ["@attributes","@new_record","@read_only"].include?(assoc)}
+              instance_vars = obj.instance_variables.reject{|assoc| ["@attributes","@new_record","@read_only","@attributes_cache"].include?(assoc)}
             end
           end
         end
@@ -109,6 +125,11 @@ module RubyAMF
           attr_name = var[1..-1]
           attr_name.to_camel! if ClassMappings.translate_case
           new_object[attr_name] = obj.instance_variable_get(var)
+        end
+        methods.each do |method|
+          attr_name = method.dup
+          attr_name.to_camel! if ClassMappings.translate_case
+          new_object[attr_name] = obj.send(method)
         end
         new_object
       rescue Exception => e

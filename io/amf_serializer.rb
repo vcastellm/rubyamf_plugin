@@ -19,6 +19,7 @@ module RubyAMF
    
       def reset_referencables
         @amf0_stored_objects = []
+        @stored_objects = []
         @stored_strings = {} # hash is way faster than array
         @stored_strings[""] = true # add this in automatically
         @floats_cache = {}
@@ -53,7 +54,7 @@ module RubyAMF
       
         0.upto(@body_count - 1) do |i|  
           reset_referencables #reset any stored references in this scope
-         
+          
           #get the body obj at index
           @body = @amfobj.get_body_at(i)
                   
@@ -117,7 +118,7 @@ module RubyAMF
 
       #AMF3
       def write_amf3(value)
-        if !value
+        if value == nil
           @stream << "\001" # represents an amf3 null
       
         elsif (value.is_a?(TrueClass) || value.is_a?(FalseClass))
@@ -157,14 +158,14 @@ module RubyAMF
       
           # I know we can combine this with the last condition, but don't  ; the Rexml and Beautiful Soup test is expensive, and for large record sets with many AR its better to be able to skip the next step
         elsif value.is_a?(ActiveRecord::Base) # Aryk: this way, we can bypass the "['REXML::Document', 'BeautifulSoup'].include?(value.class.to_s) " operation
-          write_amf3_object(VoUtil.get_vo_hash_for_outgoing(value))
+          write_amf3_object(value)
       
         elsif ['REXML::Document', 'BeautifulSoup'].include?(value.class.to_s) 
           write_byte(AMF3_XML)
           write_amf3_xml(value)
 
         elsif value.is_a?(Object)
-          write_amf3_object(VoUtil.get_vo_hash_for_outgoing(value) )
+          write_amf3_object(value)
         end
       end
   
@@ -218,34 +219,53 @@ module RubyAMF
         end
       end
     
-      def write_amf3_object(hash)   
+      def write_amf3_object(value)
+        hash = value.is_a?(Hash) ? value : VoUtil.get_vo_hash_for_outgoing(value)
         not_vo_hash = !hash.is_a?(VoHash) # is this not a vohash - then doesnt have an _explicitType parameter
-        @stream << "\n\v" # represents an amf3 object and dynamic object  
-        not_vo_hash || !hash._explicitType ? (@stream << "\001") : write_amf3_string(hash._explicitType)
-        hash.each do |attr, value| # Aryk: no need to remove any "_explicitType" or "rmember" key since they werent added as keys
-          if not_vo_hash # then that means that the attr might not be symbols and it hasn't gone through camelizing if thats needed
-            attr = attr.to_s.dup # need this just in case its frozen
-            attr.to_camel! if ClassMappings.translate_case 
+        # Check if this object has already been written (for circular references)
+        i = @stored_objects.index(value)
+        if i != nil
+          @stream << "\n"
+          reference = i << 1
+          write_amf3_integer(reference)
+        else
+          @stream << "\n\v" # represents an amf3 object and dynamic object
+          @stored_objects << value # add object here for circular references
+          not_vo_hash || !hash._explicitType ? (@stream << "\001") : write_amf3_string(hash._explicitType)
+          hash.each do |attr, attvalue| # Aryk: no need to remove any "_explicitType" or "rmember" key since they werent added as keys
+            if not_vo_hash # then that means that the attr might not be symbols and it hasn't gone through camelizing if thats needed
+              attr = attr.to_s.dup # need this just in case its frozen
+              attr.to_camel! if ClassMappings.translate_case 
+            end
+            write_amf3_string(attr) 
+            attvalue ? write_amf3(attvalue) : (@stream << "\001") # represents an amf3 null
           end
-          write_amf3_string(attr) 
-          value ? write_amf3(value) : (@stream << "\001") # represents an amf3 null
-        end        
-        @stream << "\001" # represents an amf3 empty string #close open object
+          @stream << "\001" # represents an amf3 empty string to close open object
+        end
       end
   
       def write_amf3_array(array)
-        num_objects = array.length * 2 + 1
-        if ClassMappings.use_array_collection
-          @stream << "\n\a" # AMF3_OBJECT and AMF3_XML
-          write_amf3_string("flex.messaging.io.ArrayCollection")
+        i = @stored_objects.index(array)
+        if i != nil
+          ClassMappings.use_array_collection ? @stream << "\n" : @stream << "\t"
+          reference = i << 1
+          write_amf3_integer(reference)
+        else
+          @stored_objects << array
+          num_objects = array.length * 2 + 1
+          if ClassMappings.use_array_collection
+            @stream << "\n\a" # AMF3_OBJECT and AMF3_XML
+            write_amf3_string("flex.messaging.io.ArrayCollection")
+          end
+          @stream << "\t" # represents an amf3 array
+          write_amf3_integer(num_objects)
+          @stream << "\001" # represents an amf3 empty string #write empty for string keyed elements here, as it's never allowed from ruby
+          array.each{|v| write_amf3(v) }
         end
-        @stream << "\t" # represents an amf3 array
-        write_amf3_integer(num_objects)
-        @stream << "\001" # represents an amf3 empty string #write empty for string keyed elements here, as it's never allowed from ruby
-        array.each{|v| write_amf3(v) }
       end
   
       def write_amf3_date(datetime) # Aryk: Dates will almost never be the same, so turn off the storing_objects
+        @stored_objects << datetime # we may not do lookups, but dates are still end up in the object table, so we need to add them here to keep the right counts
         write_amf3_integer(1)
         seconds = if datetime.is_a?(Time)
           datetime.utc unless datetime.utc?
