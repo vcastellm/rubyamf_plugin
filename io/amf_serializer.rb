@@ -237,8 +237,8 @@ module RubyAMF
               attr = attr.to_s.dup # need this just in case its frozen
               attr.to_camel! if ClassMappings.translate_case 
             end
-            write_amf3_string(attr) 
-            attvalue ? write_amf3(attvalue) : (@stream << "\001") # represents an amf3 null
+            write_amf3_string(attr) # write property name
+            attvalue.nil? ? (@stream << "\001") : write_amf3(attvalue) # if value is nil, write an amf null, otherwise, write value
           end
           @stream << "\001" # represents an amf3 empty string to close open object
         end

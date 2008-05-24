@@ -1,3 +1,6 @@
+--change 1.6.1
+* fixed issue 62 - false is rendered as null
+
 --changes 1.6
 Changes
 * documented hash_key_access for ClassMappings.
