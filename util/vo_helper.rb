@@ -2,6 +2,11 @@ module RubyAMF
   module VoHelper
     class VoHash < Hash
       attr_accessor :_explicitType
+      
+      def ==(other)
+        other.is_a?(VoHash) && !_explicitType.nil? && _explicitType == other._explicitType && super
+      end
+      
     end
     
     require 'app/configuration' # cant put this at the top because VoHash has to be instantiated for app/configuration to work
