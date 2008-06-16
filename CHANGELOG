@@ -1,4 +1,5 @@
 --change 1.6.1
+* fixed problems running with Rails 2.1 
 * fixed issue 62 - false is rendered as null
 
 --changes 1.6
