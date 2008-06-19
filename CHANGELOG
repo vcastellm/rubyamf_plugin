@@ -1,3 +1,6 @@
+--change 1.6.2
+* fixed backwards compatibility issue with mime type fixes
+
 --change 1.6.1
 * fixed problems running with Rails 2.1 
 * fixed issue 62 - false is rendered as null
