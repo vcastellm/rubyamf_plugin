@@ -251,16 +251,16 @@ module RubyAMF
           reference = i << 1
           write_amf3_integer(reference)
         else
-          @stored_objects << array
-          num_objects = array.length * 2 + 1
           if ClassMappings.use_array_collection
             @stream << "\n\a" # AMF3_OBJECT and AMF3_XML
             write_amf3_string("flex.messaging.io.ArrayCollection")
+            @stored_objects << array
           end
+          @stored_objects << array
           @stream << "\t" # represents an amf3 array
-          write_amf3_integer(num_objects)
+          write_amf3_integer(array.length << 1 | 1)
           @stream << "\001" # represents an amf3 empty string #write empty for string keyed elements here, as it's never allowed from ruby
-          array.each{|v| write_amf3(v) }
+          array.each { |v| write_amf3(v) }
         end
       end
   

@@ -1,3 +1,6 @@
+--change 1.6.3
+* applied patch from trisweb fixing issue #58 - ArrayCollection not serialized correctly in AMF3
+
 --change 1.6.2
 * fixed backwards compatibility issue with mime type fixes
 
