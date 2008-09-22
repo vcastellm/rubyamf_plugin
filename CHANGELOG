@@ -1,3 +1,9 @@
+--changes 1.6.4
+* FaultObject now takes an optional second argument, which is any object you want to send back with the fault. This object is accessible on the Flex side in the returned FaultEvent - faultEvent.message['extendedData'] as a typed object.
+* changed serializer to store and look up object references with a hash instead of an array. Nice speed improvement to serialization
+* fixed issue #63 - rendering in filter chain would not halt the chain. [mihai.tarnovan]
+* added a filter to capture amf input. experemental [fm. Aaron Smith]
+
 --change 1.6.3
 * applied patch from trisweb fixing issue #58 - ArrayCollection not serialized correctly in AMF3
 

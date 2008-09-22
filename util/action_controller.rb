@@ -4,6 +4,8 @@ ActionController::Base.class_eval do
   def render_with_amf(options = nil, &block)
     begin
       if options && options.is_a?(Hash) && options.keys.include?(:amf)
+        #set the @performed_render flag to avoid double renders
+        @performed_render = true
         #store results on RequestStore, can't prematurely return or send_data.
         RubyAMF::App::RequestStore.render_amf_results = options[:amf]
         RubyAMF::Configuration::ClassMappings.current_mapping_scope = options[:class_mapping_scope]||RubyAMF::Configuration::ClassMappings.default_mapping_scope

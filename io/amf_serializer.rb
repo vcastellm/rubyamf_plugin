@@ -19,7 +19,8 @@ module RubyAMF
    
       def reset_referencables
         @amf0_stored_objects = []
-        @stored_objects = []
+        @stored_objects = {}
+        @stored_objects_count = 0;
         @stored_strings = {} # hash is way faster than array
         @stored_strings[""] = true # add this in automatically
         @floats_cache = {}
@@ -220,17 +221,17 @@ module RubyAMF
       end
     
       def write_amf3_object(value)
-        hash = value.is_a?(Hash) ? value : VoUtil.get_vo_hash_for_outgoing(value)
-        not_vo_hash = !hash.is_a?(VoHash) # is this not a vohash - then doesnt have an _explicitType parameter
         # Check if this object has already been written (for circular references)
-        i = @stored_objects.index(value)
+        i = @stored_objects[value]
         if i != nil
           @stream << "\n"
           reference = i << 1
           write_amf3_integer(reference)
         else
+          hash = value.is_a?(Hash) ? value : VoUtil.get_vo_hash_for_outgoing(value)
+          not_vo_hash = !hash.is_a?(VoHash) # is this not a vohash - then doesnt have an _explicitType parameter
           @stream << "\n\v" # represents an amf3 object and dynamic object
-          @stored_objects << value # add object here for circular references
+          store_object value # add object here for circular references
           not_vo_hash || !hash._explicitType ? (@stream << "\001") : write_amf3_string(hash._explicitType)
           hash.each do |attr, attvalue| # Aryk: no need to remove any "_explicitType" or "rmember" key since they werent added as keys
             if not_vo_hash # then that means that the attr might not be symbols and it hasn't gone through camelizing if thats needed
@@ -245,7 +246,7 @@ module RubyAMF
       end
   
       def write_amf3_array(array)
-        i = @stored_objects.index(array)
+        i = @stored_objects[array.object_id]
         if i != nil
           ClassMappings.use_array_collection ? @stream << "\n" : @stream << "\t"
           reference = i << 1
@@ -254,9 +255,9 @@ module RubyAMF
           if ClassMappings.use_array_collection
             @stream << "\n\a" # AMF3_OBJECT and AMF3_XML
             write_amf3_string("flex.messaging.io.ArrayCollection")
-            @stored_objects << array
+            @stored_objects_count += 1
           end
-          @stored_objects << array
+          store_object array
           @stream << "\t" # represents an amf3 array
           write_amf3_integer(array.length << 1 | 1)
           @stream << "\001" # represents an amf3 empty string #write empty for string keyed elements here, as it's never allowed from ruby
@@ -265,7 +266,7 @@ module RubyAMF
       end
   
       def write_amf3_date(datetime) # Aryk: Dates will almost never be the same, so turn off the storing_objects
-        @stored_objects << datetime # we may not do lookups, but dates are still end up in the object table, so we need to add them here to keep the right counts
+        store_object datetime # we may not do lookups, but dates are still end up in the object table, so we need to add them here to keep the right counts
         write_amf3_integer(1)
         seconds = if datetime.is_a?(Time)
           datetime.utc unless datetime.utc?
@@ -358,6 +359,12 @@ module RubyAMF
       def write_xml(xml_string)
         write_byte(AMF_XML)
         write_long_utf(xml_string.to_s)
+      end
+      
+    protected
+      def store_object(obj)
+        @stored_objects[obj] = @stored_objects_count
+        @stored_objects_count += 1
       end
     end
   end

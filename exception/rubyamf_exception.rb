@@ -55,6 +55,7 @@ class RUBYAMFException < Exception
   attr_accessor :message
   attr_accessor :etype
   attr_accessor :ebacktrace
+  attr_accessor :payload
   
   #static accessors
   class << self

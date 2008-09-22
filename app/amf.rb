@@ -251,7 +251,7 @@ class AS3Fault < VoHash
     self["faultString"] = e.message
     self["faultDetail"] = backtrace
     self["rootCause"] = backtrace[0]
-    self["extendedData"] = backtrace
+    self["extendedData"] = e.payload || backtrace
   end
 end
 

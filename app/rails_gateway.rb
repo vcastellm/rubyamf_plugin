@@ -18,7 +18,7 @@ module RubyAMF
       include RubyAMF::Exceptions
   
       def initialize
-        RequestStore.filters = Array[AMFDeserializerFilter.new, AuthenticationFilter.new, BatchFilter.new, AMFSerializeFilter.new] #create the filter
+        RequestStore.filters = Array[AMFDeserializerFilter.new, AuthenticationFilter.new, BatchFilter.new, AMFCaptureFilter.new, AMFSerializeFilter.new] #create the filter
         RequestStore.actions = Array[PrepareAction.new, RailsInvokeAction.new] #override the actions
       end
 

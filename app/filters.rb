@@ -1,3 +1,4 @@
+require 'fileutils'
 require 'io/amf_deserializer'
 require 'io/amf_serializer'
 require 'exception/exception_handler'
@@ -21,6 +22,19 @@ module RubyAMF
       end
     end
 
+    class AMFCaptureFilter
+      include RubyAMF::Configuration
+      def run(amfobj)
+        return unless ClassMappings.capture_incoming_amf
+        message_body = amfobj.input_stream
+        body = amfobj.get_body_at(0)
+        path = "#{File.expand_path(RAILS_ROOT)}/vendor/plugins/rubyamf/amfcaptures"
+        FileUtils.mkdir_p path
+        filename = "#{path}/#{body.target_uri}_#{body.service_method_name}"
+        File.open(filename,"w").write(message_body) unless body.target_uri == "null"
+      end
+    end
+    
     class AuthenticationFilter
       include RubyAMF::App
       include RubyAMF::Configuration
@@ -50,8 +64,9 @@ module RubyAMF
           body = amfobj.get_body_at(i)
           RequestStore.actions.each do |action|
             begin #this is where any exception throughout the RubyAMF Process gets transformed into a relevant AMF0/AMF3 faultObject
-              action.run(body)
-              # puts "#{action} took: " + Benchmark.realtime{action.run(body)}.to_s + " secs"
+              # action.run(body)
+              seconds = Benchmark.realtime{ action.run(body) }
+              puts ">>>>>>>> RubyAMF >>>>>>>>> #{action} took: #{'%.5f' % seconds} secs"
             rescue RUBYAMFException => ramfe
               puts ramfe.message
               puts ramfe.backtrace
@@ -72,7 +87,9 @@ module RubyAMF
     class AMFSerializeFilter
       include RubyAMF::IO
       def run(amfobj) 
-        AMFSerializer.new(amfobj).run 
+        # AMFSerializer.new(amfobj).run 
+        seconds = Benchmark.realtime{ AMFSerializer.new(amfobj).run }
+        puts ">>>>>>>> RubyAMF >>>>>>>>> Serialization took: #{'%.5f' % seconds} secs"
       end
     end
   end

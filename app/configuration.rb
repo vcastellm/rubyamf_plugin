@@ -20,6 +20,7 @@ module RubyAMF
       @use_ruby_date_time = false
       @use_array_collection = false
       @check_for_associations = true
+      @capture_incoming_amf = false
       
       # Aryk: I cleaned up how the class variables are called here. It doesnt matter if you use class variables or instance variables on the class level. Check out this simple tutorial
       # - http://sporkmonger.com/2007/2/19/instance-variables-class-variables-and-inheritance-in-ruby      
@@ -28,7 +29,7 @@ module RubyAMF
         include RubyAMF::App
         include RubyAMF::Exceptions 
         
-        attr_accessor :ignore_fields, :use_array_collection, :default_mapping_scope, :force_active_record_ids, :attribute_names, 
+        attr_accessor :ignore_fields, :use_array_collection, :default_mapping_scope, :force_active_record_ids, :attribute_names, :capture_incoming_amf,
           :use_ruby_date_time, :current_mapping_scope, :check_for_associations, :translate_case, :assume_types, :hash_key_access  #the rails parameter mapping type
         
         def register(mapping)  #register a value object map

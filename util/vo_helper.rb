@@ -139,7 +139,7 @@ module RubyAMF
         new_object
       rescue Exception => e
         puts e.message
-        puts e.backtrace
+        # puts e.backtrace
         raise RUBYAMFException.new(RUBYAMFException.VO_ERROR, e.message)
       end
     end
