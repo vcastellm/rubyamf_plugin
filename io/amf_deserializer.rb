@@ -381,8 +381,8 @@ module RubyAMF
             obj = VoHash.new # initialize an empty VoHash value holder    
             obj._explicitType = action_class_name
             true
-          else # otherwise just use a normal hash
-            obj = {}
+          else
+            obj = VoUtil.get_ruby_class(action_class_name).new
             false
           end
             
@@ -402,7 +402,7 @@ module RubyAMF
               value = read_amf3
               #if (value)&& value != 'NaN'# have to read key to move the reader ahead in the stream
               key.to_snake! if translate_case   
-              obj[key] = value
+              VoUtil.set_value(obj, key, value)
               #end
             end
             
@@ -411,13 +411,12 @@ module RubyAMF
                 value = read_amf3
                 #if (value) && value != 'NaN'
                 key.to_snake! if translate_case  
-                obj[key] = value
+                VoUtil.set_value(obj, key, value)
                 #end
               end
             end
-            obj = VoUtil.get_vo_for_incoming(obj,action_class_name) unless skip_mapping
+            VoUtil.finalize_object(obj) #Handle id, type, lock_version, timestamps, new_record, etc. (only for ActiveRecords)
           end
-          @stored_objects[obj_position] = obj # put the new object into the same position as the original object since it was worked on
           obj
         end
       end

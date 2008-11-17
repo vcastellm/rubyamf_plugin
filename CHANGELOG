@@ -1,3 +1,5 @@
+--changes 1.6.5
+* fixed issue where associations in cyclic object graphs were deserialized to Hashes instead of ActiveRecords.
 --changes 1.6.4
 * FaultObject now takes an optional second argument, which is any object you want to send back with the fault. This object is accessible on the Flex side in the returned FaultEvent - faultEvent.message['extendedData'] as a typed object.
 * changed serializer to store and look up object references with a hash instead of an array. Nice speed improvement to serialization

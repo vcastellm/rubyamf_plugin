@@ -15,71 +15,96 @@ module RubyAMF
       include RubyAMF::Configuration
       include RubyAMF::Exceptions
       
+      def self.get_ruby_class(action_class_name)
+        mapping = ClassMappings.get_vo_mapping_for_actionscript_class(action_class_name)
+        if mapping
+          return mapping[:ruby].constantize
+        else
+          begin 
+            assumed_class = action_class_name.constantize
+            assumed_class.new
+            assumable=true
+          rescue
+            assumable=false
+          ensure
+            if ClassMappings.assume_types && assumable && assumed_class!=nil
+              return assumed_class
+            else
+              case ClassMappings.hash_key_access
+              when :symbol      : return Hash
+              when :string      : return Hash
+              when :indifferent : return HashWithIndifferentAccess
+              end
+            end            
+          end
+        end
+      end      
+      
+      def self.set_value(obj, key, value)
+        if obj.kind_of?(ActiveRecord::Base)
+          #ATTRIBUTE
+          attributes = obj.instance_variable_get('@attributes')
+          attribs = (obj.attribute_names + ["id"]).inject({}){|hash, attr| hash[attr]=true ; hash}
+          mapping = ClassMappings.get_vo_mapping_for_ruby_class(obj.class.name)
+          if (!mapping && attribs[key]) || 
+            (mapping && !mapping[:ignore_fields].include?(key) && ClassMappings.attribute_names[mapping[:ruby]][key])                  
+            attributes[key] = value
+          #ASSOCIATION
+          elsif reflection = obj.class.reflections[key.to_sym] # is it an association
+            case reflection.macro  
+            when :has_one
+              obj.send("set_#{key}_target", value) if value
+            when :belongs_to
+              obj.send("#{key}=", value) if value
+            when :has_many, :has_many_and_belongs_to
+              obj.send("#{key}").target = value if value
+            when :composed_of
+              obj.send("#{key}=", value) if value # this sets the attributes to the corresponding values
+            end
+          else
+            obj.instance_variable_set("@#{key}", value)
+          end
+        elsif obj.kind_of? Hash
+          obj[key] = value
+        else
+          raise RUBYAMFException.new(RUBYAMFException.VO_ERROR, "Argument, #{obj}, is not an ActiveRecord::Base or a Hash.")
+        end
+      end
+             
+      def self.finalize_object(obj)
+        if obj.kind_of? ActiveRecord::Base
+          attributes = obj.instance_variable_get('@attributes')
+          attributes.delete("id") if attributes["id"]==0 || attributes['id']==nil # id attribute cannot be zero or nil
+          attributes['type']=obj.class.name if  attributes['type']==nil && obj.class.superclass!=ActiveRecord::Base #STI: Always need 'type' on subclasses.
+          attributes[obj.class.locking_column]=0 if obj.class.locking_column && attributes[obj.class.locking_column]==nil #Missing lock_version is equivalent to 0.
+          obj.instance_variable_set("@new_record", false) if attributes["id"] # the record already exists in the database
+          #superstition
+          if (obj.new_record?)
+            obj.created_at = nil if obj.respond_to? "created_at"
+            obj.created_on = nil if obj.respond_to? "created_on"
+            obj.updated_at = nil if obj.respond_to? "updated_at"
+            obj.updated_on = nil if obj.respond_to? "updated_on"
+          end
+        end
+      end
+      
       #moved logic here so AMF3 and AMF0 can use it
       def self.get_vo_for_incoming(obj,action_class_name)
-        if (mapping = ClassMappings.get_vo_mapping_for_actionscript_class(action_class_name)) || ## if there is a map use, that class
-          (ruby_obj = ClassMappings.assume_types&&(action_class_name.constantize.new rescue false)) # if no map, and try to get the assumed type
-          if mapping #if there's a map, then we default to it's specification.
-            obj.reject!{|k,v| mapping[:ignore_fields][k]}
-            ruby_obj = mapping[:ruby].constantize.new
-          end            
-          if ruby_obj.is_a?(ActiveRecord::Base)        # put all the attributes fields into the attribute instance variable
-            attributes = {} # extract attributes
-            if mapping
-              obj.each_key do |field|
-                if ClassMappings.attribute_names[mapping[:ruby]][field]
-                  attributes[field] = obj.delete(field)
-                end
-              end
-            else # for assumed types when there is no mapping
-              attribs = (ruby_obj.attribute_names + ["id"]).inject({}){|hash, attr| hash[attr]=true ; hash}
-              obj.each_key do |field|
-                if attribs[field]
-                  attributes[field] = obj.delete(field)
-                end
-              end
-            end
-            attributes.delete("id") if attributes["id"]==0 # id attribute cannot be zero
-            ruby_obj.instance_variable_set("@attributes", attributes) # bypasses any overwriting of the attributes=(value) method  (also allows 'id' to be set)
-            ruby_obj.instance_variable_set("@new_record", false) if attributes["id"] # the record already exists in the database
-            #superstition
-            if (ruby_obj.new_record?)
-              ruby_obj.created_at = nil if ruby_obj.respond_to? "created_at"
-              ruby_obj.created_on = nil if ruby_obj.respond_to? "created_on"
-              ruby_obj.updated_at = nil if ruby_obj.respond_to? "updated_at"
-              ruby_obj.updated_on = nil if ruby_obj.respond_to? "updated_on"
-            end
-
-            obj.each_key do |field|
-              if reflection = ruby_obj.class.reflections[field.to_sym] # is it an association
-                value = obj.delete(field) # get rid of the field so it doesnt get added in the next loop
-                case reflection.macro  
-                when :has_one
-                  ruby_obj.send("set_#{field}_target", value)
-                when :belongs_to
-                  ruby_obj.send("#{field}=", value)
-                when :has_many, :has_many_and_belongs_to
-                  ruby_obj.send("#{field}").target = value
-                when :composed_of
-                  ruby_obj.send("#{field}=", value) # this sets the attributes to the corresponding values
-                end
-              end
-            end
-          end
-          obj.each do |field, value| # whatever is left, set them as instance variables in the object
-            ruby_obj.instance_variable_set("@#{field}", value)
-          end
-          ruby_obj
-        else # then we are still left with a normal hash, lets see if we need to change the type of the keys
+        ruby_obj = VoUtil.get_ruby_class(action_class_name).new
+        if ruby_obj.kind_of?(ActiveRecord::Base) 
+          obj.each_pair{|key, value| VoUtil.set_value(ruby_obj, key, value)}
+          VoUtil.finalize_object(ruby_obj)
+          return ruby_obj
+        else
           case ClassMappings.hash_key_access
-          when :symbol      : obj.symbolize_keys!
-          when :string      : obj # by default the keys are a string type, so just return the obj
-          when :indifferent : HashWithIndifferentAccess.new(obj)
+          when :symbol      : return obj.symbolize_keys!
+          when :string      : return obj # by default the keys are a string type, so just return the obj
+          when :indifferent : return HashWithIndifferentAccess.new(obj)
           # else  # TODO: maybe add a raise FlexError since they somehow put the wrong value for this feature
           end
         end
       end
-            
+
       # Aryk: I tried to make this more efficent and clean.
       def self.get_vo_hash_for_outgoing(obj)
         new_object = VoHash.new #use VoHash because one day, we might do away with the class Object patching
