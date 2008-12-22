@@ -61,6 +61,18 @@ module RubyAMF
             when :composed_of
               obj.send("#{key}=", value) if value # this sets the attributes to the corresponding values
             end
+          # build @methods hash
+          elsif
+            if mapping[:methods]
+              if !@methods
+                @methods = Hash.new
+              end
+              mapping[:methods].each do |method|
+                if method == key
+                  @methods["#{key}"] = value
+                end
+              end
+            end
           else
             obj.instance_variable_set("@#{key}", value)
           end
@@ -84,6 +96,10 @@ module RubyAMF
             obj.created_on = nil if obj.respond_to? "created_on"
             obj.updated_at = nil if obj.respond_to? "updated_at"
             obj.updated_on = nil if obj.respond_to? "updated_on"
+          end
+          # process @methods hash
+          @methods.each do |key, value|
+            obj.send("#{key}=", value)
           end
         end
       end
