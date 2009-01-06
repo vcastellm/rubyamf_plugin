@@ -98,8 +98,10 @@ module RubyAMF
             obj.updated_on = nil if obj.respond_to? "updated_on"
           end
           # process @methods hash
-          @methods.each do |key, value|
-            obj.send("#{key}=", value)
+          if @methods
+            @methods.each do |key, value|
+              obj.send("#{key}=", value)
+            end
           end
         end
       end
