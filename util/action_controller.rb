@@ -40,11 +40,11 @@ private
   end
   
   #remoteObject setRemoteCredentials retrieval
-  def html_credentials
+ def html_credentials
     auth_data = request.env['RAW_POST_DATA']
-    auth_data = auth_data.scan(/DSRemoteCredentials.*?\001/)
+    auth_data = auth_data.scan(/DSRemoteCredentials\006.([A-Za-z0-9\+\/=]*).*?\006/)[0][0]
     if auth_data.size > 0
-      auth_data = auth_data[0][21, auth_data[0].length-22]
+
       remote_auth = Base64.decode64(auth_data).split(':')[0..1]
     else
       return nil
@@ -57,5 +57,5 @@ private
     when :indifferent:
       return HashWithIndifferentAccess.new({:username => remote_auth[0], :password => remote_auth[1]})
     end
-  end  
+  end
 end
