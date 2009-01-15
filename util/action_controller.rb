@@ -43,6 +43,7 @@ private
  def html_credentials
     auth_data = request.env['RAW_POST_DATA']
     auth_data = auth_data.scan(/DSRemoteCredentials\006.([A-Za-z0-9\+\/=]*).*?\006/)[0][0]
+    auth_data.gsub!("DSRemoteCredentialsCharset", "")
     if auth_data.size > 0
 
       remote_auth = Base64.decode64(auth_data).split(':')[0..1]
