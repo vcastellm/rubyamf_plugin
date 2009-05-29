@@ -1,4 +1,5 @@
 --changes 1.6.5
+* Fixed issue #107, method mapping for associations
 * fixed issue where associations of type :has_and_belongs_to_many where not being detected
 * fixed issue where associations in cyclic object graphs were deserialized to Hashes instead of ActiveRecords.
 * fixed issue when specifying actionscript object properties/values to map to active record methods/parameters using "ClassMappings.register(:methods =>". Previously this worked when sending active record objects from rails to flex, but not when sending actionscript objects from flex to rails.
