@@ -56,7 +56,7 @@ module RubyAMF
               obj.send("set_#{key}_target", value) if value
             when :belongs_to
               obj.send("#{key}=", value) if value
-            when :has_many, :has_many_and_belongs_to
+            when :has_many, :has_and_belongs_to_many #victorcoder: :has_many_and_belongs_to is not type of association
               obj.send("#{key}").target = value if value
             when :composed_of
               obj.send("#{key}=", value) if value # this sets the attributes to the corresponding values
@@ -66,6 +66,9 @@ module RubyAMF
             if mapping[:methods]
               if !@methods
                 @methods = Hash.new
+              end
+              if !@methods[obj.class.name]
+                @methods[obj.class.name]=Hash.new 
               end
               mapping[:methods].each do |method|
                 if method == key
@@ -98,8 +101,8 @@ module RubyAMF
             obj.updated_on = nil if obj.respond_to? "updated_on"
           end
           # process @methods hash
-          if @methods
-            @methods.each do |key, value|
+          if @methods and @methods[obj.class.name]
+            @methods[obj.class.name].each do |key, value|
               obj.send("#{key}=", value)
             end
           end
