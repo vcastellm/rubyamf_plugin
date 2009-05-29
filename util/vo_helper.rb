@@ -67,7 +67,7 @@ module RubyAMF
               if !@methods
                 @methods = Hash.new
               end
-              if !@methods[obj.class.name]
+              if !@methods[obj.class.name] #victorcoder: Fixed issue 107, method mapping for associations
                 @methods[obj.class.name]=Hash.new 
               end
               mapping[:methods].each do |method|
