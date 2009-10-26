@@ -3,7 +3,7 @@ class String
   def to_snake! # no one should change these unless they can benchmark and prove their way is faster. =)
     @cached_snake_strings ||= {}
     @cached_snake_strings[self] ||= (
-      while x = index(/([a-z\d])([A-Z])/) # unfortunately have to use regex for this one
+      while x = index(/([a-z\d])([A-Z\d])/) # unfortunately have to use regex for this one
         y=x+1
         self[x..y] = self[x..x]+"_"+self[y..y].downcase
       end

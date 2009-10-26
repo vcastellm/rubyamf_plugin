@@ -53,10 +53,10 @@ module RubyAMF
             if mapping[:type] == "active_record" 
               @attribute_names[mapping[:ruby]] = (mapping[:ruby].constantize.new.attribute_names + ["id"]).inject({}){|hash, attr| hash[attr]=true ; hash} # include the id attribute
             end
-          rescue ActiveRecord::StatementInvalid => e
+          rescue StandardError => e
             # This error occurs during migrations, since the AR constructed above will check its columns, but the table won't exist yet.
             # We'll ignore the error if we're migrating.
-            raise unless ARGV.include?("migrate") or ARGV.include?("db:migrate")
+            raise unless ARGV.include?("migrate") or ARGV.include?("db:migrate") or ARGV.include?("rollback") or ARGV.include?("db:rollback")
           end
         end
         
