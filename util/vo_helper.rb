@@ -31,9 +31,9 @@ module RubyAMF
               return assumed_class
             else
               case ClassMappings.hash_key_access
-              when :symbol      : return Hash
-              when :string      : return Hash
-              when :indifferent : return HashWithIndifferentAccess
+              when :symbol then return Hash
+              when :string then return Hash
+              when :indifferent then return HashWithIndifferentAccess
               end
             end            
           end
@@ -56,26 +56,22 @@ module RubyAMF
               obj.send("set_#{key}_target", value) if value
             when :belongs_to
               obj.send("#{key}=", value) if value
-            when :has_many, :has_and_belongs_to_many #victorcoder: :has_many_and_belongs_to is not type of association
+            when :has_many, :has_and_belongs_to_many
               obj.send("#{key}").target = value if value
             when :composed_of
               obj.send("#{key}=", value) if value # this sets the attributes to the corresponding values
             end
-          # build @methods hash
           elsif
-            if mapping[:methods]
-              if !@methods
-                @methods = Hash.new
-              end
-              if !@methods[obj.class.name] #victorcoder: Fixed issue 107, method mapping for associations
-                @methods[obj.class.name]=Hash.new 
-              end
+             # build @methods hash
+          if mapping[:methods]
+              @methods = Hash.new if !@methods
+              @methods[obj.class.name]=Hash.new if !@methods[obj.class.name]
               mapping[:methods].each do |method|
                 if method == key
-                  @methods["#{key}"] = value
+                  @methods[obj.class.name]["#{key}"] = value
                 end
               end
-            end
+          end
           else
             obj.instance_variable_set("@#{key}", value)
           end
@@ -92,6 +88,7 @@ module RubyAMF
           attributes.delete("id") if attributes["id"]==0 || attributes['id']==nil # id attribute cannot be zero or nil
           attributes['type']=obj.class.name if  attributes['type']==nil && obj.class.superclass!=ActiveRecord::Base #STI: Always need 'type' on subclasses.
           attributes[obj.class.locking_column]=0 if obj.class.locking_column && attributes[obj.class.locking_column]==nil #Missing lock_version is equivalent to 0.
+          attributes.delete('lock_version') if attributes['lock_version']==nil || attributes['lock_version']==0 #Always need lock_version on ActiveRecords that use it, even if it's not defined on ModelObject or mapped correctly. 
           obj.instance_variable_set("@new_record", false) if attributes["id"] # the record already exists in the database
           #superstition
           if (obj.new_record?)
@@ -118,9 +115,9 @@ module RubyAMF
           return ruby_obj
         else
           case ClassMappings.hash_key_access
-          when :symbol      : return obj.symbolize_keys!
-          when :string      : return obj # by default the keys are a string type, so just return the obj
-          when :indifferent : return HashWithIndifferentAccess.new(obj)
+          when :symbol then return obj.symbolize_keys!
+          when :string then return obj # by default the keys are a string type, so just return the obj
+          when :indifferent then return HashWithIndifferentAccess.new(obj)
           # else  # TODO: maybe add a raise FlexError since they somehow put the wrong value for this feature
           end
         end

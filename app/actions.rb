@@ -1,3 +1,6 @@
+RUBY_19 = "1.9.0"
+RUBY_18 = "1.8.4"
+
 require 'app/configuration'
 module RubyAMF
   module Actions
@@ -97,9 +100,16 @@ module RubyAMF
           raise RUBYAMFException.new(RUBYAMFException.UNDEFINED_OBJECT_REFERENCE_ERROR, "There was an error loading the service class #{@amfbody.service_class_name}")
         end
         
-        if @service.private_methods.include?(@amfbody.service_method_name)
+        #call one or the other method depending in the ruby version we are using
+        if RUBY_VERSION > RUBY_19
+          caller = "to_sym"
+        else
+          caller = "to_s"
+        end 
+
+        if @service.private_methods.include?(@amfbody.service_method_name.send(caller))
           raise RUBYAMFException.new(RUBYAMFException.METHOD_ACCESS_ERROR, "The method {#{@amfbody.service_method_name}} in class {#{@amfbody.service_class_file_path}} is declared as private, it must be defined as public to access it.")
-        elsif !@service.public_methods.include?(@amfbody.service_method_name)
+        elsif !@service.public_methods.include?(@amfbody.service_method_name.send(caller))
           raise RUBYAMFException.new(RUBYAMFException.METHOD_UNDEFINED_METHOD_ERROR, "The method {#{@amfbody.service_method_name}} in class {#{@amfbody.service_class_file_path}} is not declared.")
         end
         

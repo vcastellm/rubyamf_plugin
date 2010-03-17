@@ -51,11 +51,11 @@ private
       return nil
     end
     case RubyAMF::Configuration::ClassMappings.hash_key_access
-    when :string:
+    when :string then
       return {'username' => remote_auth[0], 'password' => remote_auth[1]}
-    when :symbol:
+    when :symbol then
       return {:username => remote_auth[0], :password => remote_auth[1]}
-    when :indifferent:
+    when :indifferent then
       return HashWithIndifferentAccess.new({:username => remote_auth[0], :password => remote_auth[1]})
     end
   end

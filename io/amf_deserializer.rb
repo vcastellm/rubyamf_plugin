@@ -255,7 +255,9 @@ module RubyAMF
           #thanks Karl von Randow for this
           if length > 0
             str = String.new(readn(length)) #specifically cast as string, as we're reading verbatim from the stream
-            str.toutf8 #convert to utf8
+            if RUBY_VERSION < RUBY_19
+              str.toutf8 #convert to utf8
+            end
             @stored_strings << str
           end
           return str
@@ -285,6 +287,7 @@ module RubyAMF
         else
           seconds = read_double.to_f/1000
           time = if (seconds < 0) || ClassMappings.use_ruby_date_time # we can't use Time if its a negative second value
+            seconds += (DateTime.now.offset * 60 * 60 * 24).to_i
             DateTime.strptime(seconds.to_s, "%s")
           else 
             Time.at(seconds)

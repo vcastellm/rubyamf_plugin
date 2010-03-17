@@ -43,11 +43,11 @@ module RubyAMF
         if (auth_header = amfobj.get_header_by_key('Credentials'))
           RequestStore.auth_header = auth_header #store the auth header for later
           case ClassMappings.hash_key_access
-          when :string:
+          when :string then
             auth = {'username' => auth_header.value['userid'], 'password' => auth_header.value['password']}
-          when :symbol:
+          when :symbol then
             auth = {:username => auth_header.value['userid'], :password => auth_header.value['password']}
-          when :indifferent:
+          when :indifferent then
             auth = HashWithIndifferentAccess.new({:username => auth_header.value['userid'], :password => auth_header.value['password']})
           end
           RequestStore.rails_authentication = auth
