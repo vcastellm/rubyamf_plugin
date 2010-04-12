@@ -1,3 +1,6 @@
+--changes 1.6.6
+* Ruby 1.9 compatibility
+
 --changes 1.6.5
 * Fixed issue #107, method mapping for associations
 * fixed issue where associations of type :has_and_belongs_to_many where not being detected
