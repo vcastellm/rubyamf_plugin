@@ -44,11 +44,12 @@ module RubyAMF
         if obj.kind_of?(ActiveRecord::Base)
           #ATTRIBUTE
           attributes = obj.instance_variable_get('@attributes')
-          attribs = (obj.attribute_names + ["id"]).inject({}){|hash, attr| hash[attr]=true ; hash}
+          attribs = (obj.attribute_names + [obj.class.primary_key]).inject({}){|hash, attr| hash[attr]=true ; hash} # fosrias: includes custom primary keys
           mapping = ClassMappings.get_vo_mapping_for_ruby_class(obj.class.name)
           if (!mapping && attribs[key]) || 
             (mapping && !mapping[:ignore_fields].include?(key) && ClassMappings.attribute_names[mapping[:ruby]][key])                  
             attributes[key] = value
+            obj.send("#{key}_will_change!")  #fosrias: flags the attribute to change with partial_updates
           #ASSOCIATION
           elsif reflection = obj.class.reflections[key.to_sym] # is it an association
             case reflection.macro  
@@ -85,17 +86,23 @@ module RubyAMF
       def self.finalize_object(obj)
         if obj.kind_of? ActiveRecord::Base
           attributes = obj.instance_variable_get('@attributes')
-          attributes.delete("id") if attributes["id"]==0 || attributes['id']==nil # id attribute cannot be zero or nil
+          primary_key = obj.class.primary_key # fosrias: allows for custom primary keys
+          attributes.delete(primary_key) if attributes[primary_key]==0 || attributes[primary_key]==nil # fosrias: primary_key attribute cannot be zero or nil
           attributes['type']=obj.class.name if  attributes['type']==nil && obj.class.superclass!=ActiveRecord::Base #STI: Always need 'type' on subclasses.
           attributes[obj.class.locking_column]=0 if obj.class.locking_column && attributes[obj.class.locking_column]==nil #Missing lock_version is equivalent to 0.
           attributes.delete('lock_version') if attributes['lock_version']==nil || attributes['lock_version']==0 #Always need lock_version on ActiveRecords that use it, even if it's not defined on ModelObject or mapped correctly. 
-          obj.instance_variable_set("@new_record", false) if attributes["id"] # the record already exists in the database
+          if obj.composite?
+            obj.instance_variable_set("@new_record", false) if obj.class.exists?(obj.id.to_s) # fosrias: no other way to tell with composite primary keys
+          else
+            obj.instance_variable_set("@new_record", false) if attributes[primary_key] # the record already exists in the database, fosrias: works on custom primary key
+          end
           #superstition
           if (obj.new_record?)
             obj.created_at = nil if obj.respond_to? "created_at"
             obj.created_on = nil if obj.respond_to? "created_on"
             obj.updated_at = nil if obj.respond_to? "updated_at"
             obj.updated_on = nil if obj.respond_to? "updated_on"
+            obj.instance_variable_set("@changed_attributes", {}) # fosrias: only set changed attributes for existing records
           end
           # process @methods hash
           if @methods and @methods[obj.class.name]

@@ -51,7 +51,8 @@ module RubyAMF
           # for deserialization - looking up in a hash is faster than looking up in an array.
           begin
             if mapping[:type] == "active_record" 
-              @attribute_names[mapping[:ruby]] = (mapping[:ruby].constantize.new.attribute_names + ["id"]).inject({}){|hash, attr| hash[attr]=true ; hash} # include the id attribute
+              primary_key = eval(mapping[:ruby]).primary_key # fosrias : allows for custom primary keys
+              @attribute_names[mapping[:ruby]] = (mapping[:ruby].constantize.new.attribute_names + [primary_key]).inject({}){|hash, attr| hash[attr]=true ; hash} # fosrias: include the primary key attribute
             end
           rescue StandardError => e
             # This error occurs during migrations, since the AR constructed above will check its columns, but the table won't exist yet.

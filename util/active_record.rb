@@ -14,4 +14,12 @@ class ActiveRecord::Base
     SDTOUT.puts "ActiveRecord::Base#as_single! is no longer needed, all single active records return as an object. This warning will be taken out in 1.4, please update your controller"
     self
   end
+  
+  def method_missing(symbol, *params) # fosrias: handles call in VoHelper.finalize_object if composite primary keys plugin not installed
+    if (symbol.to_s =~ /composite?/)
+      false
+    else
+      super
+    end 
+  end
 end
