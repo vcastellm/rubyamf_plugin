@@ -15,11 +15,4 @@ class ActiveRecord::Base
     self
   end
   
-  def method_missing(symbol, *params) # fosrias: handles call in VoHelper.finalize_object if composite primary keys plugin not installed
-    if (symbol.to_s =~ /composite?/)
-      false
-    else
-      super
-    end 
-  end
 end

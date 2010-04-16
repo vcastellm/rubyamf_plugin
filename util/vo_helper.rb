@@ -91,10 +91,10 @@ module RubyAMF
           attributes['type']=obj.class.name if  attributes['type']==nil && obj.class.superclass!=ActiveRecord::Base #STI: Always need 'type' on subclasses.
           attributes[obj.class.locking_column]=0 if obj.class.locking_column && attributes[obj.class.locking_column]==nil #Missing lock_version is equivalent to 0.
           attributes.delete('lock_version') if attributes['lock_version']==nil || attributes['lock_version']==0 #Always need lock_version on ActiveRecords that use it, even if it's not defined on ModelObject or mapped correctly. 
-          if obj.composite?
+          if primary_key != 'id'
             obj.instance_variable_set("@new_record", false) if obj.class.exists?(obj.id.to_s) # fosrias: no other way to tell with composite primary keys
           else
-            obj.instance_variable_set("@new_record", false) if attributes[primary_key] # the record already exists in the database, fosrias: works on custom primary key
+            obj.instance_variable_set("@new_record", false) if attributes['id'] # the record already exists in the database
           end
           #superstition
           if (obj.new_record?)
