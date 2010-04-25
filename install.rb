@@ -4,12 +4,12 @@ begin
   overwrite = true
     
   if !File.exist?('./config/rubyamf_config.rb')
-    FileUtils.copy_file("./vendor/plugins/rubyamf/rails_installer_files/rubyamf_config.rb", "./config/rubyamf_config.rb", false)
+    FileUtils.copy_file("./vendor/plugins/rubyamf_plugin/rails_installer_files/rubyamf_config.rb", "./config/rubyamf_config.rb", false)
   end
   
-  FileUtils.copy_file("./vendor/plugins/rubyamf/rails_installer_files/rubyamf_controller.rb","./app/controllers/rubyamf_controller.rb",false)
-  FileUtils.copy_file("./vendor/plugins/rubyamf/rails_installer_files/rubyamf_helper.rb","./app/helpers/rubyamf_helper.rb",false)
-  FileUtils.copy_file("./vendor/plugins/rubyamf/rails_installer_files/crossdomain.xml","./public/crossdomain.xml", false)
+  FileUtils.copy_file("./vendor/plugins/rubyamf_plugin/rails_installer_files/rubyamf_controller.rb","./app/controllers/rubyamf_controller.rb",false)
+  FileUtils.copy_file("./vendor/plugins/rubyamf_plugin/rails_installer_files/rubyamf_helper.rb","./app/helpers/rubyamf_helper.rb",false)
+  FileUtils.copy_file("./vendor/plugins/rubyamf_plugin/rails_installer_files/crossdomain.xml","./public/crossdomain.xml", false)
   
   mime = true
   mime_types_file_exists = File.exists?('./config/initializers/mime_types.rb')
