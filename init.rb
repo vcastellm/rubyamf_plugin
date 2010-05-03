@@ -1,4 +1,4 @@
-$:.unshift(File.expand_path(RAILS_ROOT) + '/vendor/plugins/rubyamf/')
+$:.unshift(File.expand_path(RAILS_ROOT) + '/vendor/plugins/rubyamf_plugin/')
 
 #utils must be first
 require 'util/string'
