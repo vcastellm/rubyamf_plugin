@@ -1,0 +1,90 @@
+= RubyAMF: Flash and Flex Remoting for Ruby on Rails
+
+RubyAMF is an open source flash remoting gateway for Ruby on Rails.
+
+== Installation
+
+	$ ruby script/plugin install git://github.com/victorcoder/rubyamf_plugin.git
+	
+== Configuration
+
+Please read the documentation in rubyamf_config.rb. That file gets installed to config/rubyamf_config.rb when you use the rails installer.
+
+== Parameter mappings
+
+Here's how parameter mappings behave by default:
+
+- Every remoting parameter is available in the order it came - in the "params" hash. So if you sent over 2 parameters in your remoting call. You could access them like: params[0], and params[1].
+
+- You can toggle this behavior, RubyAMF has a property called "rubyamf_params". This is useful if you don't want every parameter coming into the "params" hash. Set "ParameterMappings.always_add_to_params" to false. Once set to false - parameters by index will only be put into "rubyamf_params" and not "params"
+
+Here's what happens when you go beyond that and setup some custom ParameterMappings:
+
+- When you setup ParameterMappings. They get put into the "params" hash, as well as the "rubyamf_params" hash for consistency.
+
+How do I get data deeper in the object than just referencing the index it came in?
+
+Because RubyAMF turns dynamic objects into hashes, you can use hash accessor like logic to get deeper into a parameter. Here's a quick EX:
+
+	ParameterMappings.register({:controller => :MyController, :action => :myaction, :params => {:myproperty => "[0]['firstname']" }})
+
+== Supported types
+
+RubyAMF Supports AMF0, AMF3, and RemoteObject
+
+== AMF Type conversions
+
+Flash 2 RubyAMF:
+
+undefined -> nil
+null -> nil
+false -> false
+true -> true
+Number -> Fixnum
+int -> Integer
+String -> String
+XML -> String (cast in your service)
+Array -> Array
+MixexArray? -> Hash
+Object -> Hash
+Custom Class -> Ruby Class
+RubyAMF 2 Flash:
+
+nil -> null
+false -> false
+true -> true
+Numeric -> Number
+String -> String
+BeautifulSoup? -> XML
+REXML::Doc -> xml
+Array -> Array
+Hash -> Object
+Ruby Class -> Custom Class
+
+== Generators
+
+RubyAMF Code Generators and Helper Scripts
+
+=== Introduction
+
+RubyAMF currently has two generators
+
+RubyAMF only scaffold generator
+Console printing ClassMapping? helper generator
+
+=== Details
+
+	$ script/generate rubyamf_scaffold <model> <attributes>
+
+will produce a model, fixtures, tests, and a RubyAMF specific controller with actions that work only with incoming :amf formats.
+
+	$ script/generate rubyamf_mappings
+
+will print class mapping entries for each model in app/models and below to the command line. This is designed to help easily add new class mappings to the rubyamf_config.rb configuration file.
+
+
+
+== Credits
+
+(c) aaron smith
+http://www.rubyamf.org
