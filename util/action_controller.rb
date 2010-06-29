@@ -1,7 +1,7 @@
 require 'app/request_store'
 require 'app/configuration'
 ActionController::Base.class_eval do
-  def render_with_amf(options = nil, &block)
+  def render_with_amf(options = nil, extra_options ={}, &block)
     begin
       if options && options.is_a?(Hash) && options.keys.include?(:amf)
         #set the @performed_render flag to avoid double renders
@@ -10,7 +10,7 @@ ActionController::Base.class_eval do
         RubyAMF::App::RequestStore.render_amf_results = options[:amf]
         RubyAMF::Configuration::ClassMappings.current_mapping_scope = options[:class_mapping_scope]||RubyAMF::Configuration::ClassMappings.default_mapping_scope
       else
-        render_without_amf(options,&block)
+        render_without_amf(options,extra_options,&block)
       end
     rescue Exception => e
       #suppress missing template warnings
