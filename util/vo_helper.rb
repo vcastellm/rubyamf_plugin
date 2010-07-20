@@ -76,6 +76,14 @@ module RubyAMF
           else
             obj.instance_variable_set("@#{key}", value)
           end
+        elsif obj.kind_of? ActiveResource::Base 
+          # fosrias: if assume_types = true and there is no mapping, all attributes will be mapped since there is no way to tell the related model's attributes. 
+          # Use [Transient] tag in flex/flash classes to prevent mapping in this case for local properties.
+          attributes = obj.instance_variable_get('@attributes')
+          mapping = ClassMappings.get_vo_mapping_for_ruby_class(obj.class.name)
+          if (!mapping || mapping && !mapping[:ignore_fields].include?(key))      
+            attributes[key] = value
+          end
         elsif obj.kind_of? Hash
           obj[key] = value
         else
@@ -104,6 +112,10 @@ module RubyAMF
             obj.updated_on = nil if obj.respond_to? "updated_on"
             obj.instance_variable_set("@changed_attributes", {}) # fosrias: only set changed attributes for existing records
           end
+    
+    end
+    
+    if obj.kind_of?(ActiveRecord::Base) || obj.kind_of?(ActiveResource::Base)
           # process @methods hash
           if @methods 
             @methods.delete(obj.class.name).each do |key, value|
@@ -111,7 +123,7 @@ module RubyAMF
             end if @methods[obj.class.name]
             
             # fosrias: Process method related attributes passed back if they have a setter defined
-			# Allows setting attr_accessors as methods on ActiveRecord objects.
+      # Allows setting attr_accessors as methods on ActiveRecord or ActiveResource objects.
             @methods.each do |key, value|
               obj.send("#{key}=", value) if obj.respond_to?("#{key}=")
             end
@@ -165,6 +177,17 @@ module RubyAMF
                 methods << method if obj.respond_to?(method)
               end
             end
+          elsif map[:type]=="active_resource" # fosrias: without this, attributes is one of the two instance variables and it will not map the individual attributes. Elseif for speed so only checked if not active record.
+            instance_vars = obj.instance_variable_get("@attributes").collect do |attribute_pair|
+              attr_name = "@#{attribute_pair[0]}"
+              obj.instance_variable_set(attr_name, attribute_pair[1])
+              attr_name
+            end
+            if map[:associations] # Aryk: if they opted for assocations, make sure that they are loaded in. This is great for composed_of, since it cannot be included on a find
+              # fosrias: not implemented
+            elsif ClassMappings.check_for_associations
+              # fosrias: not implemented
+            end
           end
           new_object._explicitType = map[:actionscript] # Aryk: This only works on the Hash because rubyAMF extended class Object to have this accessor, probably not the best idea, but its already there.   
           # Tony: There's some duplication in here. Had trouble consolidating the logic though. Ruby skills failed.
@@ -180,8 +203,26 @@ module RubyAMF
             if ClassMappings.check_for_associations
               instance_vars = obj.instance_variables.reject{|assoc| ["@attributes","@new_record","@read_only","@attributes_cache"].include?(assoc)}
             end
+          elsif obj.is_a?(ActiveResource::Base) # fosrias: without this, attributes is one of the two instance variables and it will not map the individual attributes. Elseif for speed so only checked if not active record.
+            instance_vars = obj.instance_variable_get("@attributes").collect do |attribute_pair|
+              attr_name = "@#{attribute_pair[0]}"
+              obj.instance_variable_set(attr_name, attribute_pair[1])
+              attr_name
+            end
+            if ClassMappings.check_for_associations
+              # fosrias: not implemented
+            end
           end
-        end
+        elsif obj.is_a?(ActiveResource::Base) # fosrias: Need this for case of no mapping and assumed_types = false.
+            instance_vars = obj.instance_variable_get("@attributes").collect do |attribute_pair|
+              attr_name = "@#{attribute_pair[0]}"
+              obj.instance_variable_set(attr_name, attribute_pair[1])
+              attr_name
+            end
+            if ClassMappings.check_for_associations
+              # fosrias: not implemented
+            end
+          end
         instance_vars.each do |var| # this also picks up the eager loaded associations, because association called "has_many_assoc" has an instance variable called "@has_many_assoc"
           attr_name = var[1..-1]
           attr_name.to_camel! if ClassMappings.translate_case

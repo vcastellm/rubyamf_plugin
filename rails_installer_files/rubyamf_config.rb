@@ -47,7 +47,7 @@ module RubyAMF
     # :ruby           # The ruby class to turn it into
     #
     # => Optional value object properties:
-    # :type           # Used to spectify the type of VO, valid options are 'active_record', 'custom',  (or don't specify at all)
+    # :type           # Used to spectify the type of VO, valid options are 'active_record', 'active_resource', 'custom',  (or don't specify at all)
     # :associations   # Specify which associations to read on the active record (only applies to active records)
     # :attributes     # Specifically which attributes to include in the serialization
     # :methods        # An array of methods to call and place values in a similarly named attribute on the Actionscript Object (outgoing, or Rails => Actionscript only)
