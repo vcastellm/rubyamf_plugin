@@ -113,9 +113,9 @@ module RubyAMF
             obj.instance_variable_set("@changed_attributes", {}) # fosrias: only set changed attributes for existing records
           end
     
-    end
+		end
     
-    if obj.kind_of?(ActiveRecord::Base) || obj.kind_of?(ActiveResource::Base)
+		if obj.kind_of?(ActiveRecord::Base) || obj.kind_of?(ActiveResource::Base)
           # process @methods hash
           if @methods 
             @methods.delete(obj.class.name).each do |key, value|
@@ -123,7 +123,7 @@ module RubyAMF
             end if @methods[obj.class.name]
             
             # fosrias: Process method related attributes passed back if they have a setter defined
-      # Allows setting attr_accessors as methods on ActiveRecord or ActiveResource objects.
+			# Allows setting attr_accessors as methods on ActiveRecord or ActiveResource objects.
             @methods.each do |key, value|
               obj.send("#{key}=", value) if obj.respond_to?("#{key}=")
             end
