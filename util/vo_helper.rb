@@ -100,7 +100,7 @@ module RubyAMF
           attributes[obj.class.locking_column]=0 if obj.class.locking_column && attributes[obj.class.locking_column]==nil #Missing lock_version is equivalent to 0.
           attributes.delete('lock_version') if attributes['lock_version']==nil || attributes['lock_version']==0 #Always need lock_version on ActiveRecords that use it, even if it's not defined on ModelObject or mapped correctly. 
           if primary_key != 'id'
-            obj.instance_variable_set("@new_record", false) if obj.class.exists?(obj.id.to_s) # fosrias: no other way to tell with custom primary keys
+            obj.instance_variable_set("@new_record", false) if obj.id && obj.class.exists?(obj.id.to_s) # fosrias: no other way to tell with custom primary keys
           else
             obj.instance_variable_set("@new_record", false) if attributes['id'] # the record already exists in the database
           end
