@@ -9,7 +9,7 @@ module RubyAMF
       @rails_authentication
       @reload_services = false
       @gzip = false
-      @service_path = File.expand_path(RAILS_ROOT) + '/app/controllers'
+      @service_path = File.expand_path(Rails::VERSION::MAJOR < 3 ? RAILS_ROOT : ::Rails.root.to_s) + '/app/controllers' #fosrias: RAILS_ROOT deprectated in Rails 3
       
       class << self
         attr_accessor :amf_encoding

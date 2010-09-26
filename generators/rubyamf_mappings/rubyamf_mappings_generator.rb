@@ -2,7 +2,7 @@ require 'rbconfig'
 
 class RubyamfMappingsGenerator < Rails::Generator::Base
   
-  MODEL_DIR = File.join(RAILS_ROOT, "app/models")
+  MODEL_DIR = File.join(Rails::VERSION::MAJOR < 3 ? RAILS_ROOT : ::Rails.root.to_s, "app/models") #fosrias: RAILS_ROOT deprectated in Rails 3
   
   def initialize(runtime_args, runtime_options = {})
   end
