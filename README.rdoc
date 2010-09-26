@@ -5,6 +5,16 @@ RubyAMF is an open source flash remoting gateway for Ruby on Rails.
 == Installation
 
 	$ ruby script/plugin install git://github.com/victorcoder/rubyamf_plugin.git
+
+Rails 3:
+
+    $ rails plugin install git://github.com/victorcoder/rubyamf_plugin.git
+
+Confirm correct installation and routing by browsing to:
+
+    http://localhost:[port]/rubyamf/gateway
+
+You will see the rubyamf logo on a black background.
 	
 == Configuration
 
@@ -71,6 +81,8 @@ RubyAMF currently has two generators
 
 RubyAMF only scaffold generator
 Console printing ClassMapping? helper generator
+
+Note: Currently the generators have not been upgraded to Rails 3 generators.
 
 === Details
 
