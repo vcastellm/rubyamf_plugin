@@ -146,7 +146,19 @@ module RubyAMF
         rescue Exception => e
           raise RUBYAMFException.new(RUBYAMFException.PARAMETER_MAPPING_ERROR, "There was an error with your parameter mappings: {#{e.message}}")
         end
-        @service.process(req, res)
+
+        #fosrias
+        #@service.process(req, res)
+
+        # call the controller action differently depending on Rails version
+        if Rails::VERSION::MAJOR < 3
+          @service.process(req, res)
+        else
+          @service.request = req
+          @service.response = res
+          @service.process(action.to_sym)
+        end
+        #fosrias
         
         #unset conditional helper
         @service.is_amf = false
