@@ -72,7 +72,7 @@ begin
 
   if route_amf_controller
     routes = File.read('./config/routes.rb')
-    routes_regexp =  Rails::VERSION::MAJOR < 3 ? /(ActionController::Routing::Routes.draw do \|map\|)/ : /Application.routes.draw do/
+    routes_regexp =  Rails::VERSION::MAJOR < 3 ? /(ActionController::Routing::Routes.draw do \|map\|)/ : /(Application.routes.draw do)/
     updated_routes = routes.gsub(routes_regexp) do |s|
       if  Rails::VERSION::MAJOR < 3
         "#{$1}\n  map.rubyamf_gateway 'rubyamf_gateway', :controller => 'rubyamf', :action => 'gateway'\n"
