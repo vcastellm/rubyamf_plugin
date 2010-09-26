@@ -8,11 +8,11 @@ RubyAMF is an open source flash remoting gateway for Ruby on Rails.
 
 Rails 3:
 
-    $ rails plugin install git://github.com/victorcoder/rubyamf_plugin.git
+	$ rails plugin install git://github.com/victorcoder/rubyamf_plugin.git
 
 Confirm correct installation and routing by browsing to:
 
-    http://localhost:[port]/rubyamf/gateway
+	http://localhost:[port]/rubyamf/gateway
 
 You will see the rubyamf logo on a black background.
 	
