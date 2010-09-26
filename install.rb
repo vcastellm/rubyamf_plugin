@@ -51,20 +51,12 @@ begin
   #  end
   #end
 
-  #fosrias: Add Rails 3 routes
+  #fosrias: Add version correct route
   File.open('./config/routes.rb', 'r') do |f|
     while  line = f.gets
       if line.match("map.rubyamf_gateway 'rubyamf_gateway', :controller => 'rubyamf', :action => 'gateway") &&
          Rails::VERSION::MAJOR < 3 || line.match("match 'rubyamf/gateway', :to => 'rubyamf#gateway'")  #Rails 3 route
         route_amf_controller = false
-        break
-      elsif Rails::VERSION::MAJOR >= 3 && line.match("map.rubyamf_gateway 'rubyamf_gateway', :controller => 'rubyamf', :action => 'gateway")
-        #fosrias: remove rails 2.x or less route
-        routes = File.read('./config/routes.rb')
-        updated_routes = routes.gsub(/\s*map.rubyamf_gateway 'rubyamf_gateway', :controller => 'rubyamf', :action => 'gateway'\n/, '')
-        File.open('./config/routes.rb', 'w') do |file|
-          file.write updated_routes
-        end
         break
       end
     end
@@ -75,9 +67,9 @@ begin
     routes_regexp =  Rails::VERSION::MAJOR < 3 ? /(ActionController::Routing::Routes.draw do \|map\|)/ : /(Application.routes.draw do)/
     updated_routes = routes.gsub(routes_regexp) do |s|
       if  Rails::VERSION::MAJOR < 3
-        "#{$1}\n  map.rubyamf_gateway 'rubyamf_gateway', :controller => 'rubyamf', :action => 'gateway'\n"
+        "#{$1}\n\n  map.rubyamf_gateway 'rubyamf_gateway', :controller => 'rubyamf', :action => 'gateway'\n"
       else
-         "#{$1}\n  match 'rubyamf/gateway', :to => 'rubyamf#gateway'\n"  #Rails 3 route
+         "#{$1}\n\n  match 'rubyamf/gateway', :to => 'rubyamf#gateway'\n"  #Rails 3 route
       end
     end
     File.open('./config/routes.rb', 'w') do |file|
