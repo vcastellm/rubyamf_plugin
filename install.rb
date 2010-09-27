@@ -67,9 +67,9 @@ begin
     routes_regexp =  Rails::VERSION::MAJOR < 3 ? /(ActionController::Routing::Routes.draw do \|map\|)/ : /(Application.routes.draw do)/
     updated_routes = routes.gsub(routes_regexp) do |s|
       if  Rails::VERSION::MAJOR < 3
-        "#{$1}\n\n  map.rubyamf_gateway 'rubyamf_gateway', :controller => 'rubyamf', :action => 'gateway'\n"
+        "#{$1}\n  map.rubyamf_gateway 'rubyamf_gateway', :controller => 'rubyamf', :action => 'gateway'\n"
       else
-         "#{$1}\n\n  match 'rubyamf/gateway', :to => 'rubyamf#gateway'\n"  #Rails 3 route
+         "#{$1}\n  match 'rubyamf/gateway', :to => 'rubyamf#gateway'\n"  #Rails 3 route
       end
     end
     File.open('./config/routes.rb', 'w') do |file|
