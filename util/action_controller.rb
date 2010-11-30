@@ -18,6 +18,21 @@ ActionController::Base.class_eval do
     end
   end
   alias_method_chain :render, :amf
+end if Rails::VERSION::MAJOR < 3
+
+# fosrias: Update for Rails 3+ rendering
+module ActionController
+  module Renderers
+    add :amf do |amf, options|
+      #set the @performed_render flag to avoid double renders
+      @performed_render = true
+      #store results on RequestStore, can't prematurely return or send_data.
+      RubyAMF::App::RequestStore.render_amf_results = amf
+      RubyAMF::Configuration::ClassMappings.current_mapping_scope = options[:class_mapping_scope]||RubyAMF::Configuration::ClassMappings.default_mapping_scope
+      self.content_type ||= Mime::AMF
+      self.response_body = " "
+    end unless Rails::VERSION::MAJOR < 3
+  end
 end
 
 #This class extends ActionController::Base
@@ -60,3 +75,5 @@ private
     end
   end
 end
+
+
