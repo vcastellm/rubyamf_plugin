@@ -2,7 +2,7 @@
 * Applied patch from fosrias fixing issue 125, which:
     - Fixed ActiveRecord deserialization with partial_updates enabled so that existing ActiveRecord attributes are flagged to update.
     - Added ability to use custom primary keys on ActiveRecords, including composite primary keys.
-* Ruby 1.9 compatibility
+* Ruby 1.9 compatibility 
 
 --changes 1.6.5
 * Fixed issue #107, method mapping for associations
