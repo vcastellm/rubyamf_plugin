@@ -142,9 +142,15 @@ module RubyAMF
             @stream << "\005" # represents an amf3 complex number
             write_double(value)
           end
+
+        elsif(value.is_a?(ByteArray))
+          #puts "write_amf3 sending ByteArray"
+          @stream << AMF3_BYTE_ARRAY # represents an amf3 bytearray
+          write_amf3_string(value)
     
         elsif(value.is_a?(String))
-          @stream << "\006" # represents an amf3 string
+          #puts "write_amf3 sending String"
+          @stream << AMF3_STRING # represents an amf3 string
           write_amf3_string(value)
          
         elsif(value.is_a?(Array))

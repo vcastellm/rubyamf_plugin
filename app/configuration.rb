@@ -136,7 +136,9 @@ module RubyAMF
                       end
                     end
                   end
-                  request_params[:id] = rubyamf_params[:id] = first['id'] if (first['id'] && !(first['id']==0))
+                  if first.respond_to? :key? and first.key? "id"
+                   request_params[:id] = rubyamf_params[:id] = first['id'] if (first['id'] && !(first['id']==0))
+                  end
                 end
               end
             end
