@@ -2,6 +2,10 @@ require 'app/request_store'
 begin
   module RubyAMF
   module IO
+    
+      class ByteArray < String
+      end
+      
     module Constants
       #AMF0
       AMF_NUMBER = 0x00

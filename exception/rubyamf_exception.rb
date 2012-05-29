@@ -88,7 +88,11 @@ class RUBYAMFException < Exception
   
   # stringify the message
   def to_s
-    @msg
+    if @message
+       @message.to_s
+    else
+      "no message in the RUBYAMFException"
+    end
   end
   
 end
